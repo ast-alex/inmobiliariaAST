@@ -1,0 +1,87 @@
+@model IEnumerable<inmobiliariaAST.Models.Inquilino>
+@{
+    ViewData["Title"] = "Lista de inquilinos";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Lista de inquilinos</h1>
+</div>			
+<h4>
+	<a href="/Inquilino/Edicion/">Agregar Nuevo Inquilino</a>
+</h4>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>DNI</th>
+			<th>Nombre</th>
+			<th>Apellido</th>
+			<th>Telefono</th>
+			<th>Email</th>
+			<th>Direccion</th>
+			<th>Acciones</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				 <td>
+                    @Html.DisplayFor(modelItem => item.DNI)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Apellido)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Telefono)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Direccion)
+                </td>
+				<td>
+          <a href="/Inquilino/Edicion/@item.Id_inquilino">Editar</a>
+					@Html.ActionLink("Detalles", "Details", new { id = item.Id_inquilino }) |
+					<input type="submit" value="Eliminar" class="btn btn-primary" onclick="eliminar(@item.Id_inquilino, `@item.Nombre`)" />
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+<form class="modal" tabindex="-1" asp-action="Eliminar" id="modal_eliminar_inquilino">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirme Eliminar</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+		<input type="hidden" name="id" value="" id="inquilino_eliminar_id">
+        <p>inquilino: <span id="inquilino_eliminar_nombre"></span></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+      </div>
+    </div>
+  </div>
+</form>
+
+@section Scripts {
+<script>
+	function eliminar(id, nombre){
+		document.querySelector("#inquilino_eliminar_id").value = id;
+		document.querySelector("#inquilino_eliminar_nombre").innerHTML = nombre;
+		$("#modal_eliminar_inquilino").modal("show");
+	}
+</script>
+}
+

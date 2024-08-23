@@ -1,0 +1,38 @@
+# Binaries
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.ncrunch*
+*.vscode/
+
+# NuGet
+packages/
+*.nupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Publish
+publish/
+
+# Temporary files
+*.tmp
+*.log
+*.lock
+
+# Build results
+*.buildlog
+*.tlog
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
