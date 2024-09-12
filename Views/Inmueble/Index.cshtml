@@ -1,0 +1,43 @@
+@model IEnumerable<inmobiliariaAST.Models.Inmueble>
+
+@{
+    ViewBag.Title = "Listado de Inmuebles";
+}
+
+<h2>Listado de Inmuebles!!</h2>
+
+<a href="@Url.Action("Crear")" class="btn btn-primary mb-3">Crear Nuevo Inmueble</a>
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Direccion</th>
+            <th>Uso</th>
+            <th>Tipo</th>
+            <th>Ambientes</th>
+            <th>Precio</th>
+            <th>Estado</th>
+            <th>Propietario</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var inmueble in Model)
+        {
+            <tr>
+                <td>@inmueble.Direccion</td>
+                <td>@inmueble.Uso</td>
+                <td>@inmueble.Tipo</td>
+                <td>@inmueble.Cantidad_Ambientes</td>
+                <td>@inmueble.Precio</td>
+                <td>@inmueble.Estado</td>
+                <td>@inmueble.Propietario?.Nombre @inmueble.Propietario?.Apellido</td>
+                <td>
+                    <a href="@Url.Action("Detalles", new { id = inmueble.ID_inmueble})" class="btn btn-info btn-sm">Ver</a>
+                    <a href="@Url.Action("Edicion", new { id = inmueble.ID_inmueble })" class="btn btn-warning btn-sm">Editar</a>
+                    <a href="@Url.Action("Eliminar", new { id = inmueble.ID_inmueble})" class="btn btn-danger btn-sm" onclick="return confirm('Seguro de eliminar Inmueble?');">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

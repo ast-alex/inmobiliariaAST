@@ -4,7 +4,7 @@ namespace inmobiliariaAST.Models
 {
     public class RepositorioInquilino
     {
-        private string ConnectionString = "Server=localhost;User=root;Password=;Database=inmobiliaria_e1;SslMode=none";
+        private string ConnectionString = "Server=localhost;User=root;Password=;Database=inm;SslMode=none";
 
         public List<Inquilino> GetInquilinos()
         {

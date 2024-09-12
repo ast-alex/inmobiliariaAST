@@ -34,7 +34,7 @@ public class PropietarioController : Controller
     [HttpPost]
     public IActionResult Guardar(int id, Propietario propietario)
     {
-        id = propietario.Id_propietario;
+        id = propietario.ID_propietario;
         if(id == 0)
         {
             repo.Alta(propietario);

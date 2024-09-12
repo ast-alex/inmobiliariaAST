@@ -2,7 +2,7 @@ namespace inmobiliariaAST.Models;
 
 public class Propietario
 {
-    public int Id_propietario { get; set; } 
+    public int ID_propietario { get; set; } 
 
     public string DNI { get; set; } = "";
     

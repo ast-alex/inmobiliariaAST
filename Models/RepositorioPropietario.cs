@@ -4,7 +4,7 @@ namespace inmobiliariaAST.Models;
 
 public class RepositorioPropietario
 {
-    private string ConnectionString = "Server=localhost;User=root;Password=;Database=inmobiliaria_e1;SslMode=none";
+    private string ConnectionString = "Server=localhost;User=root;Password=;Database=inm;SslMode=none";
 
     public List<Propietario> GetPropietarios()
     {
@@ -20,7 +20,7 @@ public class RepositorioPropietario
                 {
                     propietarios.Add(new Propietario
                     {
-                        Id_propietario = reader.GetInt32(0),
+                        ID_propietario = reader.GetInt32(0),
                         DNI = reader.GetString(1),
                         Nombre = reader.GetString(2),
                         Apellido = reader.GetString(3),
@@ -50,7 +50,7 @@ public class RepositorioPropietario
                 {
                     res = new Propietario
                     {
-                        Id_propietario = reader.GetInt32(0),
+                        ID_propietario = reader.GetInt32(0),
                         DNI = reader.GetString(1),
                         Nombre = reader.GetString(2),
                         Apellido = reader.GetString(3),
@@ -105,7 +105,7 @@ public class RepositorioPropietario
                     WHERE Id_propietario = @id";
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
-                command.Parameters.AddWithValue("@id", propietario.Id_propietario);
+                command.Parameters.AddWithValue("@id", propietario.ID_propietario);
                 command.Parameters.AddWithValue("@dni", propietario.DNI);
                 command.Parameters.AddWithValue("@nombre", propietario.Nombre);
                 command.Parameters.AddWithValue("@apellido", propietario.Apellido);
