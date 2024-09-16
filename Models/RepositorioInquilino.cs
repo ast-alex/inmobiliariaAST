@@ -20,7 +20,7 @@ namespace inmobiliariaAST.Models
                     {
                         inquilinos.Add(new Inquilino
                         {
-                            Id_inquilino = reader.GetInt32(0),
+                            ID_inquilino = reader.GetInt32(0),
                             DNI = reader.GetString(1),
                             Nombre = reader.GetString(2),
                             Apellido = reader.GetString(3),
@@ -50,7 +50,7 @@ namespace inmobiliariaAST.Models
                     {
                         res = new Inquilino
                         {
-                            Id_inquilino = reader.GetInt32(0),
+                            ID_inquilino = reader.GetInt32(0),
                             DNI = reader.GetString(1),
                             Nombre = reader.GetString(2),
                             Apellido = reader.GetString(3),
@@ -105,7 +105,7 @@ namespace inmobiliariaAST.Models
                         WHERE Id_inquilino = @id";
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@id", inquilino.Id_inquilino);
+                    command.Parameters.AddWithValue("@id", inquilino.ID_inquilino);
                     command.Parameters.AddWithValue("@dni", inquilino.DNI);
                     command.Parameters.AddWithValue("@nombre", inquilino.Nombre);
                     command.Parameters.AddWithValue("@apellido", inquilino.Apellido);

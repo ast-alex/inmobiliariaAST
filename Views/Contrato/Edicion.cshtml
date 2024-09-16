@@ -1,0 +1,72 @@
+@model inmobiliariaAST.Models.Contrato
+
+@{
+    ViewData["Title"] = "Editar Contrato";
+}
+
+<h2>Edicion de Contrato</h2>
+
+<form asp-action="Edicion" method="post">
+    <div class="form-group">
+        <label asp-for="ID_contrato" class="control-label">Contrato N°</label>
+        <input asp-for="ID_contrato" class="form-control" readonly />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ID_inmueble" class="control-label">Inmueble</label>
+        <select asp-for="ID_inmueble" class="form-control" asp-items="ViewBag.Inmuebles"></select>
+        <span asp-validation-for="ID_inmueble" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ID_inquilino" class="control-label">Inquilino</label>
+        <select asp-for="ID_inquilino" class="form-control" asp-items="ViewBag.Inquilinos"></select>
+        <span asp-validation-for="ID_inquilino" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Fecha_Inicio" class="control-label">Fecha de Inicio</label>
+        <input asp-for="Fecha_Inicio" class="form-control" type="date" />
+        <span asp-validation-for="Fecha_Inicio" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Fecha_Fin" class="control-label">Fecha de Fin</label>
+        <input asp-for="Fecha_Fin" class="form-control" type="date" />
+        <span asp-validation-for="Fecha_Fin" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Monto_Mensual" class="control-label">Monto Mensual</label>
+        <input asp-for="Monto_Mensual" class="form-control" />
+        <span asp-validation-for="Monto_Mensual" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Estado" class="control-label">Estado</label>
+        <select asp-for="Estado" class="form-control">
+            <option value="true" selected="@(Model.Estado ? "selected" : null)">Activo</option>
+            <option value="false" selected="@(Model.Estado ? null : "selected")">Inactivo</option>
+        </select>
+        <span asp-validation-for="Estado" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Fecha_Terminacion_Anticipada" class="control-label">Fecha de Terminación Anticipada (Opcional)</label>
+        <input asp-for="Fecha_Terminacion_Anticipada" class="form-control" type="date" />
+        <span asp-validation-for="Fecha_Terminacion_Anticipada" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Multa" class="control-label">Multa por Terminación Anticipada (Opcional)</label>
+        <input asp-for="Multa" class="form-control" />
+        <span asp-validation-for="Multa" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

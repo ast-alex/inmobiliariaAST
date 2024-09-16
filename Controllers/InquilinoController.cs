@@ -34,7 +34,7 @@ namespace inmobiliariaAST.Controllers;
         [HttpPost]
         public IActionResult Guardar(int id, Inquilino inquilino)
         {
-            id = inquilino.Id_inquilino;
+            id = inquilino.ID_inquilino;
             if (id == 0)
             {
                 repo.Alta(inquilino);

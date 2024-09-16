@@ -1,0 +1,54 @@
+@model IEnumerable<inmobiliariaAST.Models.Contrato>
+
+@{
+    ViewData["Title"] = "Listado de Contratos";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Listado de Contratos</h1>
+</div>	
+
+<a class="btn btn-primary" asp-action="Crear">Crear nuevo Contrato</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Contrato N°</th>
+            <th>Inmueble</th>
+            <th>Inquilino</th>
+            <th>Fecha Inicio</th>
+            <th>Fecha Fin</th>
+            <th>Monto Mensual</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var contrato in Model)
+            {
+                <tr>
+                    <td>@contrato.ID_contrato</td>
+                    <td>@contrato.ID_inmueble</td> <!-- Aquí podrías mostrar más información del inmueble si tienes relaciones -->
+                    <td>@contrato.ID_inquilino</td> <!-- Similar para el inquilino -->
+                    <td>@contrato.Fecha_Inicio.ToShortDateString()</td>
+                    <td>@contrato.Fecha_Fin.ToShortDateString()</td>
+                    <td>@String.Format("{0:C}", contrato.Monto_Mensual)</td>
+                    <td>@(contrato.Estado ? "Activo" : "Inactivo")</td>
+                    <td>
+                        <a class="btn btn-info" asp-action="Detalles" asp-route-id="@contrato.ID_contrato">Detalles</a>
+                        <a class="btn btn-warning" asp-action="Edicion" asp-route-id="@contrato.ID_contrato">Editar</a>
+                        <a class="btn btn-danger" asp-action="Eliminar" asp-route-id="@contrato.ID_contrato">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="8">No se encontraron contratos.</td>
+            </tr>
+        }
+    </tbody>
+</table>
