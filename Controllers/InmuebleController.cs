@@ -9,13 +9,13 @@ namespace inmobiliariaAST.Controllers
     {
         private readonly ILogger<InmuebleController> _logger;
         private readonly RepositorioInmueble repo;
-        private readonly RepositorioPropietario repoPropietario; // Asumiendo que tienes un repositorio para propietarios
+        private readonly RepositorioPropietario repoPropietario; 
 
         public InmuebleController(ILogger<InmuebleController> logger)
         {
             _logger = logger;
             repo = new RepositorioInmueble();
-            repoPropietario = new RepositorioPropietario(); // Inicializa tu repositorio de propietarios
+            repoPropietario = new RepositorioPropietario(); 
         }
 
         // Listar todos los inmuebles
@@ -28,13 +28,14 @@ namespace inmobiliariaAST.Controllers
         // Mostrar el formulario de creación
         public IActionResult Crear()
         {
-            // Llenar la lista de propietarios si es necesario
-            ViewBag.Propietario = new SelectList(
-                repoPropietario.GetPropietarios(), // Método para obtener la lista de propietarios
-                "ID_propietario", // Asegúrate de que el campo de ID coincida con tu modelo
-                "Nombre" // El campo para mostrar en el dropdown
+            var propietarios = repoPropietario.GetPropietarios()
+                .Select(p => new SelectListItem{
+                    Value = p.ID_propietario.ToString(),
+                    Text = $"{p.Nombre} {p.Apellido}"
+                }).ToList();
 
-            );
+            // Cargar lista de propietarios para el dropdown en la vista
+            ViewBag.Propietarios = propietarios;
 
             return View();
         }
@@ -92,7 +93,7 @@ namespace inmobiliariaAST.Controllers
             {
                 // Llamar al repositorio para modificar el inmueble
                 repo.Modificar(inmueble);
-                return RedirectToAction("Index"); // O a la vista de detalles si prefieres
+                return RedirectToAction("Index"); 
             }
 
             var propietarios = repoPropietario.GetPropietarios()
@@ -108,6 +109,15 @@ namespace inmobiliariaAST.Controllers
             return View(inmueble);
         }
 
+        //detalles inmueble
+        public IActionResult Detalles(int id){
+
+            var inmueble = repo.Get(id);
+            if(inmueble == null){
+                return NotFound();
+            }
+            return View(inmueble);
+        }
 
 
         // Eliminar inmueble

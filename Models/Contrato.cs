@@ -11,4 +11,7 @@ public class Contrato{
     public DateTime? Fecha_Terminacion_Anticipada { get; set; }
     public decimal? Multa { get; set; }
 
+    public string? InmuebleDireccion { get; set; }
+    public string? InquilinoNombreCompleto { get; set; }
+
 }

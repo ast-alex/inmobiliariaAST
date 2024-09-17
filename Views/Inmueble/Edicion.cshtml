@@ -28,7 +28,7 @@
             <option value="Casa">Casa</option>
             <option value="Departamento">Departamento</option>
             <option value="Local">Local</option>
-            <option value="Depósito">Depósito</option>
+            <option value="Deposito">Depósito</option>
             <option value="Otro">Otros..</option>
         </select>
         <span asp-validation-for="Tipo" class="text-danger"></span>
@@ -70,8 +70,8 @@
     <div class="form-group">
         <label asp-for="Estado" class="control-label"></label>
         <select asp-for="Estado" class="form-control">
-            <option value="Disponible">Disponible</option>
-            <option value="No Disponible">No Disponible</option>
+            <option value="true">Disponible</option>
+            <option value="false">No Disponible</option>
         </select>
         <span asp-validation-for="Estado" class="text-danger"></span>
     </div>

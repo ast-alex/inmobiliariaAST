@@ -29,18 +29,22 @@ namespace inmobiliariaAST.Controllers{
         //mostrar form de crear contraro
         public IActionResult Crear()
         {
-            ViewBag.Inmueble = new SelectList(
+            ViewBag.Inmuebles = new SelectList(
                 repoInmueble.GetInmuebles(), //metodo para obtener la lista de inmuebles
                 "ID_inmueble", 
                 "Direccion"
             );
 
-            ViewBag.Inquilino = new SelectList(
-                repoInquilino.GetInquilinos(), //metodo para obtener la lista de inquilinos
-                "ID_inquilino", 
-                "Nombre",
-                "Apellido"
-            );
+            // Obtener la lista de inquilinos y concatenar nombre y apellido
+            var inquilinos = repoInquilino.GetInquilinos()
+                .Select(i => new SelectListItem
+                {
+                    Value = i.ID_inquilino.ToString(),
+                    Text = $"{i.Nombre} {i.Apellido}", // Concatenar nombre y apellido
+                })
+                .ToList();
+
+            ViewBag.Inquilinos = inquilinos;
 
             return View();
         }
@@ -51,22 +55,17 @@ namespace inmobiliariaAST.Controllers{
         {
             if(ModelState.IsValid)
             {
+                //al crear un contrato deberia inicializarse como ACTIVO por defecto...
+                contrato.Estado = true;
                 repoContrato.Alta(contrato);
                 return RedirectToAction(nameof(Index));
             }
 
             //si no es valido, volvemos a mostrar el form
-            ViewBag.Inmueble = new SelectList(
-                repoInmueble.GetInmuebles(), //metodo para obtener la lista de inmuebles
+            ViewBag.Inmuebles = new SelectList(
+                repoInmueble.GetInmuebles(), 
                 "ID_inmueble", 
                 "Direccion"
-            );
-
-            ViewBag.Inquilino = new SelectList(
-                repoInquilino.GetInquilinos(), //metodo para obtener la lista de inquilinos
-                "ID_inquilino", 
-                "Nombre",
-                "Apellido"
             );
 
             return View(contrato);
@@ -84,18 +83,27 @@ namespace inmobiliariaAST.Controllers{
             }
 
             //recuperar la lista de inmuebles e inquilinos 
-            ViewBag.Inmueble = new SelectList(
-                repoInmueble.GetInmuebles(), //metodo para obtener la lista de inmuebles
+            ViewBag.Inmuebles = new SelectList(
+                repoInmueble.GetInmuebles(),
                 "ID_inmueble", 
                 "Direccion",
                 contrato.ID_inmueble
             );
 
-            ViewBag.Inquilino = new SelectList(
-                repoInquilino.GetInquilinos(), //metodo para obtener la lista de inquilinos
-                "ID_inquilino", 
-                "Nombre",
-                contrato.ID_inquilino
+            // Obtener la lista de inquilinos y concatenar nombre y apellido
+            var inquilinos = repoInquilino.GetInquilinos()
+                .Select(i => new SelectListItem
+                {
+                    Value = i.ID_inquilino.ToString(),
+                    Text = $"{i.Nombre} {i.Apellido}", // Concatenar nombre y apellido
+                })
+                .ToList();
+
+            ViewBag.Inquilinos = new SelectList(
+                inquilinos,
+                "Value",
+                "Text", 
+                contrato.ID_inquilino.ToString() // Seleccionar el inquilino actual
             );
 
             return View(contrato);
@@ -112,20 +120,31 @@ namespace inmobiliariaAST.Controllers{
             }
 
             //si no es valido, volvemos a mostrar el form
-            ViewBag.Inmueble = new SelectList(
-                repoInmueble.GetInmuebles(), //metodo para obtener la lista de inmuebles
+            ViewBag.Inmuebles = new SelectList(
+                repoInmueble.GetInmuebles(), 
                 "ID_inmueble", 
                 "Direccion",
                 contrato.ID_inmueble
             );
 
-            ViewBag.Inquilino = new SelectList(
-                repoInquilino.GetInquilinos(), //metodo para obtener la lista de inquilinos
+            ViewBag.Inquilinos = new SelectList(
+                repoInquilino.GetInquilinos(), 
                 "ID_inquilino", 
-                "Nombre",
+                "InquilinoNombreCompleto",
                 contrato.ID_inquilino
             );
 
+            return View(contrato);
+        }
+
+        //detalles contrato
+        public IActionResult Detalles(int id)
+        {
+            var contrato = repoContrato.Get(id);
+            if(contrato == null)
+            {
+                return NotFound();
+            }
             return View(contrato);
         }
 

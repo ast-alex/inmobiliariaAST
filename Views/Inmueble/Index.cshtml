@@ -32,10 +32,18 @@
                 <td>@inmueble.Tipo</td>
                 <td>@inmueble.Cantidad_Ambientes</td>
                 <td>@inmueble.Precio</td>
-                <td>@inmueble.Estado</td>
+                <td>
+                    @if(inmueble.Estado)
+                    {
+                        <span>Disponible</span>
+                    }else
+                    {
+                        <span>No Disponible</span>
+                    }
+                </td>
                 <td>@inmueble.Propietario?.Nombre @inmueble.Propietario?.Apellido</td>
                 <td>
-                    <a href="@Url.Action("Detalles", new { id = inmueble.ID_inmueble})" class="btn btn-info btn-sm">Ver</a>
+                    <a href="@Url.Action("Detalles", new { id = inmueble.ID_inmueble})" class="btn btn-info btn-sm">Detalles</a>
                     <a href="@Url.Action("Edicion", new { id = inmueble.ID_inmueble })" class="btn btn-warning btn-sm">Editar</a>
                     <a href="@Url.Action("Eliminar", new { id = inmueble.ID_inmueble})" class="btn btn-danger btn-sm" onclick="return confirm('Seguro de eliminar Inmueble?');">Eliminar</a>
                 </td>

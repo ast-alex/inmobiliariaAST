@@ -30,8 +30,8 @@
             {
                 <tr>
                     <td>@contrato.ID_contrato</td>
-                    <td>@contrato.ID_inmueble</td> <!-- Aquí podrías mostrar más información del inmueble si tienes relaciones -->
-                    <td>@contrato.ID_inquilino</td> <!-- Similar para el inquilino -->
+                    <td>@contrato.InmuebleDireccion</td> <!-- Aquí podrías mostrar más información del inmueble si tienes relaciones -->
+                    <td>@contrato.InquilinoNombreCompleto</td> <!-- Similar para el inquilino -->
                     <td>@contrato.Fecha_Inicio.ToShortDateString()</td>
                     <td>@contrato.Fecha_Fin.ToShortDateString()</td>
                     <td>@String.Format("{0:C}", contrato.Monto_Mensual)</td>

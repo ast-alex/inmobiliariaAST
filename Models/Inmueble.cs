@@ -19,7 +19,7 @@ public class Inmueble{
     [Required]
     public decimal Precio { get; set; }
     [Required]
-    public EstadoInmueble Estado { get; set; }
+    public bool Estado { get; set; }
     [Required]
     public int ID_propietario { get; set; }
     public Propietario? Propietario { get; set; }
@@ -37,9 +37,4 @@ public enum TipoInmueble{
     Casa,
     Departamento,
     Otro
-}
-
-public enum EstadoInmueble{
-    Disponible,
-    NoDisponible
 }

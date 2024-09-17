@@ -46,6 +46,15 @@ public class PropietarioController : Controller
 
         return RedirectToAction(nameof(Index));
     }
+    //detalle propietario
+    public IActionResult Detalles(int id){
+        
+        var propietario = repo.Get(id);
+        if(propietario == null){
+            return NotFound();
+        }
+        return View(propietario);
+    }
     
     public IActionResult Eliminar(int id)
     {

@@ -47,6 +47,16 @@ namespace inmobiliariaAST.Controllers;
             return RedirectToAction(nameof(Index));
         }
 
+        //detalles inquilino
+        public IActionResult Detalles(int id){
+
+            var inquilino = repo.Get(id);
+            if(inquilino == null){
+                return NotFound();
+            }
+            return View(inquilino);
+        }
+
         public IActionResult Eliminar(int id)
         {
             repo.Baja(id);

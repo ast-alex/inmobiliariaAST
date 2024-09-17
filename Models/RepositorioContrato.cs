@@ -15,9 +15,13 @@ namespace inmobiliariaAST.Models
             using (MySqlConnection connection = new MySqlConnection(ConnectionString))
             {
                 connection.Open();
-                string query = @"SELECT ID_contrato, ID_inmueble, ID_inquilino, Fecha_Inicio, Fecha_Fin, 
-                                    Monto_Mensual, Estado, Fecha_Terminacion_Anticipada, Multa 
-                                 FROM Contrato";
+                string query = @"SELECT c.ID_contrato, c.Fecha_Inicio, c.Fecha_Fin, c.Monto_Mensual, c.Estado,
+                                        c.Fecha_Terminacion_Anticipada, c.Multa, 
+                                        i.Direccion AS InmuebleDireccion, 
+                                        CONCAT(iq.Nombre, ' ', iq.Apellido) AS InquilinoNombreCompleto
+                                FROM Contrato c
+                                JOIN Inmueble i ON c.ID_inmueble = i.ID_inmueble
+                                JOIN Inquilino iq ON c.ID_inquilino = iq.ID_inquilino";
 
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
@@ -28,20 +32,20 @@ namespace inmobiliariaAST.Models
                             Contrato contrato = new Contrato
                             {
                                 ID_contrato = reader.GetInt32("ID_contrato"),
-                                ID_inmueble = reader.GetInt32("ID_inmueble"),
-                                ID_inquilino = reader.GetInt32("ID_inquilino"),
                                 Fecha_Inicio = reader.GetDateTime("Fecha_Inicio"),
                                 Fecha_Fin = reader.GetDateTime("Fecha_Fin"),
                                 Monto_Mensual = reader.GetDecimal("Monto_Mensual"),
                                 Estado = reader.GetBoolean("Estado"),
-
-                                // Verificamos si los campos opcionales (nullable) tienen valores
                                 Fecha_Terminacion_Anticipada = reader.IsDBNull(reader.GetOrdinal("Fecha_Terminacion_Anticipada"))
                                     ? (DateTime?)null
                                     : reader.GetDateTime("Fecha_Terminacion_Anticipada"),
                                 Multa = reader.IsDBNull(reader.GetOrdinal("Multa"))
                                     ? (decimal?)null
-                                    : reader.GetDecimal("Multa")
+                                    : reader.GetDecimal("Multa"),
+
+                                // reemplazo ID_inmueble y ID_inquilino 
+                                InmuebleDireccion = reader.GetString("InmuebleDireccion"),
+                                InquilinoNombreCompleto = reader.GetString("InquilinoNombreCompleto")
                             };
 
                             contratos.Add(contrato);
@@ -53,6 +57,7 @@ namespace inmobiliariaAST.Models
             return contratos;
         }
 
+
         public Contrato? Get(int id)
         {
             Contrato? contrato = null;
@@ -60,10 +65,15 @@ namespace inmobiliariaAST.Models
             using (MySqlConnection connection = new MySqlConnection(ConnectionString))
             {
                 connection.Open();
-                string query = @"SELECT ID_contrato, ID_inmueble, ID_inquilino, Fecha_Inicio, Fecha_Fin, 
-                                    Monto_Mensual, Estado, Fecha_Terminacion_Anticipada, Multa 
-                                FROM Contrato 
-                                WHERE ID_contrato = @id";
+                 string query = @"SELECT c.ID_contrato, c.ID_inmueble, c.ID_inquilino, c.Fecha_Inicio, c.Fecha_Fin, c.Monto_Mensual, c.Estado,
+                                        c.Fecha_Terminacion_Anticipada, c.Multa, 
+                                        i.Direccion AS InmuebleDireccion, 
+                                        CONCAT(iq.Nombre, ' ', iq.Apellido) AS InquilinoNombreCompleto
+                                FROM Contrato c
+                                JOIN Inmueble i ON c.ID_inmueble = i.ID_inmueble
+                                JOIN Inquilino iq ON c.ID_inquilino = iq.ID_inquilino 
+                                WHERE c.ID_contrato = @id";
+                                
 
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
@@ -89,7 +99,11 @@ namespace inmobiliariaAST.Models
                                     : reader.GetDateTime("Fecha_Terminacion_Anticipada"),
                                 Multa = reader.IsDBNull(reader.GetOrdinal("Multa"))
                                     ? (decimal?)null
-                                    : reader.GetDecimal("Multa")
+                                    : reader.GetDecimal("Multa"),
+                                
+                                  // reemplazo ID_inmueble y ID_inquilino 
+                                InmuebleDireccion = reader.GetString("InmuebleDireccion"),
+                                InquilinoNombreCompleto = reader.GetString("InquilinoNombreCompleto")
                             };
                         }
                     }
