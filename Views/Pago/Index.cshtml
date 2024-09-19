@@ -1,0 +1,76 @@
+@model IEnumerable<inmobiliariaAST.Models.Pago>
+
+@{
+    ViewBag.Title = "Lista de Pagos";
+    var estadoSelect = ViewBag.EstadoSelect as bool?;
+}
+
+<h2>Listado de Pagoss</h2>
+
+<!-- Dropdown para filtrar por estado -->
+<form method="get" action="@Url.Action("Index", "Pago")">
+    <select name="estado" id="estadoSelect" onchange="this.form.submit()">
+        <option value="">Todos los Pagos</option>
+        <option value="true" >Pagos Activos</option>
+        <option value="false">Pagos Anulados</option>
+    </select>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Número de Pago</th>
+            <th>Inquilino</th>
+            <th>Dirección del Inmueble</th>
+            <th>Fecha</th>
+            <th>Importe</th>
+            <th>Concepto</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var pago in Model)
+        {
+            <tr>
+                <td>@pago.Numero_pago</td>
+                <td>@pago.InquilinoNombreCompleto</td>
+                <td>@pago.InmuebleDireccion</td>
+                <td>@pago.Fecha_pago.ToShortDateString()</td>
+                <td>@pago.Importe</td>
+                <td>@pago.Concepto</td>
+                 <td>
+                    @if (pago.Estado)
+                    {
+                        <span class="badge bg-success">Activo</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Anulado</span> 
+                    }
+                </td>
+                <td>
+                    <a href="@Url.Action("Detalles", "Pago", new { id = pago.ID_pago })" class="btn btn-info">Detalles</a>
+                    <a href="@Url.Action("Edicion", "Pago", new { id = pago.ID_pago })" class="btn btn-warning">Editar</a>
+                    @if(pago.Estado)
+                    {
+                        <a href="@Url.Action("Eliminar", "Pago", new { id = pago.ID_pago })" class="btn btn-danger">Eliminar</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a href="@Url.Action("Crear", "Pago")" class="btn btn-success">Agregar Pago</a>
+<a href="@Url.Action("Index", "Contrato")" class="btn btn-primary">Volver a Contratos</a>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+        var estadoSelect = 'ViewBag.EstadoSelect';
+        var selectElement = document.getElementById('estadoSelect');
+        if(estadoSelect === true || estadoSelect === 'false'){
+            selectElement.value = estadoSelect;
+        }
+    });
+</script>

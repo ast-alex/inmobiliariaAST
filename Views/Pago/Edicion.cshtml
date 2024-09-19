@@ -1,0 +1,35 @@
+@model inmobiliariaAST.Models.Pago
+
+@{
+    ViewBag.Title = "Editar Pago";
+}
+
+<h2>Editar Pago Número @Model.Numero_pago</h2>
+
+<form asp-action="Edicion">
+    <div class="form-group">
+        <label for="Numero_pago">Número de Pago</label>
+        <input type="number" asp-for="Numero_pago" class="form-control" readonly />
+    </div>
+
+    <div class="form-group">
+        <label for="Fecha_pago">Fecha de Pago</label>
+        <input type="date" asp-for="Fecha_pago" class="form-control" readonly />
+    </div>
+
+    <div class="form-group">
+        <label for="Importe">Importe</label>
+        <input type="number" asp-for="Importe" class="form-control" readonly />
+    </div>
+
+    <div class="form-group">
+        <label for="Concepto">Concepto</label>
+        <input type="text" asp-for="Concepto" class="form-control" />
+    </div>
+
+    <input type="hidden" asp-for="ID_pago" />
+    <input type="hidden" asp-for="ID_contrato" />
+
+    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+    <a href="@Url.Action("Index", "Pago", new { idContrato = Model.ID_contrato })" class="btn btn-secondary">Volver</a>
+</form>

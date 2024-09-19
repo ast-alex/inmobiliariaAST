@@ -1,0 +1,53 @@
+@model inmobiliariaAST.Models.Pago
+
+@{
+    ViewBag.Title = "Detalles del Pago";
+}
+
+<h2>Detalles del Pago</h2>
+
+<div class="container">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Propiedad</th>
+                <th>Valor</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Número de Pago</td>
+                <td>@Model.Numero_pago</td>
+            </tr>
+            <tr>
+                <td>Inquilino</td>
+                <td>@Model.InquilinoNombreCompleto</td>
+            </tr>
+            <tr>
+                <td>Dirección del Inmueble</td>
+                <td>@Model.InmuebleDireccion</td>
+            </tr>
+            <tr>
+                <td>Fecha de Pago</td>
+                <td>@Model.Fecha_pago.ToShortDateString()</td>
+            </tr>
+            <tr>
+                <td>Importe</td>
+                <td>@Model.Importe.ToString("C")</td>
+            </tr>
+            <tr>
+                <td>Concepto</td>
+                <td>@Model.Concepto</td>
+            </tr>
+            <tr>
+                <td>Estado</td>
+                <td>@(Model.Estado ? "Activo" : "Anulado")</td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
+
+<a href="@Url.Action("Edicion", "Pago", new { id = Model.ID_pago })" class="btn btn-warning">Editar</a>
+<a href="@Url.Action("Index", "Pago", new { idContrato = Model.ID_contrato })" class="btn btn-primary">Volver a Pagos</a>
