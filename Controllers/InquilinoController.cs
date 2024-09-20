@@ -1,8 +1,10 @@
 using inmobiliariaAST.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace inmobiliariaAST.Controllers;
 
+    [Authorize]
     public class InquilinoController : Controller
     {
         private readonly ILogger<InquilinoController> _logger;
@@ -57,6 +59,8 @@ namespace inmobiliariaAST.Controllers;
             return View(inquilino);
         }
 
+
+        [Authorize(Roles = "Administrador")]
         public IActionResult Eliminar(int id)
         {
             repo.Baja(id);

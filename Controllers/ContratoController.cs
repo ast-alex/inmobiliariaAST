@@ -1,9 +1,11 @@
 using inmobiliariaAST.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 
 namespace inmobiliariaAST.Controllers{
 
+    [Authorize]
     public class ContratoController : Controller
     {
         private readonly ILogger<ContratoController> _logger;
@@ -148,7 +150,10 @@ namespace inmobiliariaAST.Controllers{
             return View(contrato);
         }
 
+
+
         //eliminar contrato (logico)
+        [Authorize(Roles = "Administrador")]
         public IActionResult Eliminar(int id)
         {
             repoContrato.Eliminar(id);

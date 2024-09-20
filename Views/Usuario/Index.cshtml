@@ -1,0 +1,48 @@
+@model IEnumerable<inmobiliariaAST.Models.Usuario>
+
+@{
+    ViewData["Title"] = "Usuarios";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    @if (User.IsInRole("Administrador"))
+    {
+        <a asp-action="Crear" class="btn btn-primary">Crear Nuevo Usuario</a>
+    }
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var usuario in Model)
+        {
+            <tr>
+                <td>@usuario.Email</td>
+                <td>@usuario.Nombre</td>
+                <td>@usuario.Apellido</td>
+                <td>@(usuario.Estado == true ? "Activo" : "Inactivo")</td>
+                <td>
+                    <a asp-action="Detalles" asp-route-id="@usuario.ID_usuario" class="btn btn-info btn-sm">Detalles</a>
+                    @if (User.IsInRole("Administrador"))
+                    {
+                        <a asp-action="Edicion" asp-route-id="@usuario.ID_usuario" class="btn btn-warning btn-sm">Editar</a>
+                        <a asp-action="Eliminar" asp-route-id="@usuario.ID_usuario" class="btn btn-danger btn-sm">Eliminar</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<a href="@Url.Action("Crear", "Usuario")" class="btn btn-success">Agregar Usuario</a>

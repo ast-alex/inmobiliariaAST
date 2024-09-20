@@ -38,8 +38,11 @@
                     <td>@(contrato.Estado ? "Activo" : "Inactivo")</td>
                     <td>
                         <a class="btn btn-info" asp-action="Detalles" asp-route-id="@contrato.ID_contrato">Detalles</a>
-                        <a class="btn btn-warning" asp-action="Edicion" asp-route-id="@contrato.ID_contrato">Editar</a>
-                        <a class="btn btn-danger" asp-action="Eliminar" asp-route-id="@contrato.ID_contrato">Eliminar</a>
+                            <a class="btn btn-warning" asp-action="Edicion" asp-route-id="@contrato.ID_contrato">Editar</a>
+                         @if (User.IsInRole("Administrador"))
+                        {
+                            <a class="btn btn-danger" asp-action="Eliminar" asp-route-id="@contrato.ID_contrato">Eliminar</a>
+                        }
                     </td>
                 </tr>
             }

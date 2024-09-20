@@ -1,9 +1,11 @@
 using inmobiliariaAST.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 
 namespace inmobiliariaAST.Controllers
 {
+    [Authorize]
     public class PagoController : Controller
     {
         private readonly ILogger<PagoController> _logger;
@@ -103,7 +105,9 @@ namespace inmobiliariaAST.Controllers
         }
 
 
+
         //eliminacion logica
+        [Authorize(Roles = "Administrador")]
         public IActionResult Eliminar(int id){
             
             var resultado = repo.AnularPago(id);

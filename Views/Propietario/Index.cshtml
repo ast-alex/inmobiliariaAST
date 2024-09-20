@@ -47,7 +47,10 @@
 				<td>
 					<a href="/Propietario/Detalles/@item.ID_propietario" class="btn btn-info btn-sm">Detalles</a>
           <a href="/Propietario/Edicion/@item.ID_propietario" class="btn btn-warning btn-sm">Editar</a>
-					<input type="submit" value="Eliminar" class="btn btn-danger btn-sm" onclick="eliminar(@item.ID_propietario, `@item.Nombre`)" />
+					 @if (User.IsInRole("Administrador"))
+          {
+            <input type="submit" value="Eliminar" class="btn btn-danger btn-sm" onclick="eliminar(@item.ID_propietario, `@item.Nombre`)" />
+          }
 				</td>
 			</tr>
 		}

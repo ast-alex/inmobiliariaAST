@@ -1,0 +1,47 @@
+@model inmobiliariaAST.Models.Usuario
+
+@{
+    ViewData["Title"] = "Detalles del Usuario";
+}
+
+<h2>Detalles del Usuario</h2>
+
+<div class="card">
+    <div class="card-header">
+        <h4>@Model.Nombre @Model.Apellido</h4>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">ID Usuario:</dt>
+            <dd class="col-sm-9">@Model.ID_usuario</dd>
+
+            <dt class="col-sm-3">Email:</dt>
+            <dd class="col-sm-9">@Model.Email</dd>
+
+            <dt class="col-sm-3">Rol:</dt>
+            <dd class="col-sm-9">@((Roles)Model.Rol)</dd>
+
+            <dt class="col-sm-3">Estado:</dt>
+            <dd class="col-sm-9">@(Model.Estado ? "Activo" : "Inactivo")</dd>
+
+            <dt class="col-sm-3">Avatar:</dt>
+            <dd class="col-sm-9">
+                @if (!string.IsNullOrEmpty(Model.Avatar))
+                {
+                    <img src="@Url.Content(Model.Avatar)" alt="Avatar" style="width: 100px; height: 100px; border-radius: 50%;" />
+                }
+                else
+                {
+                    <span>No hay avatar disponible.</span>
+                }
+            </dd>
+        </dl>
+    </div>
+    <div class="card-footer">
+        <a asp-action="Index" class="btn btn-primary">Volver a la lista</a>
+        @if(ViewBag.EsAdministrador)
+        {
+            <a asp-action="Edicion" asp-route-id="@Model.ID_usuario" class="btn btn-warning">Editar</a>    
+        }
+    </div>
+</div>

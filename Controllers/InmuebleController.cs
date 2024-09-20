@@ -2,9 +2,11 @@ using inmobiliariaAST.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 
 namespace inmobiliariaAST.Controllers
 {
+    [Authorize]
     public class InmuebleController : Controller
     {
         private readonly ILogger<InmuebleController> _logger;
@@ -119,7 +121,7 @@ namespace inmobiliariaAST.Controllers
             return View(inmueble);
         }
 
-
+        [Authorize(Roles = "Administrador")]
         // Eliminar inmueble
         public IActionResult Eliminar(int id)
         {
