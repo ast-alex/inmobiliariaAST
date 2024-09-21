@@ -1,6 +1,11 @@
 @model inmobiliariaAST.Models.Usuario
 
-<form asp-action="Edicion">
+@{
+    var esAdministrador = ViewBag.EsAdministrador as bool? ?? false;
+    var esPropioPerfil = ViewBag.esPropioPerfil as bool? ?? false;
+}
+
+<form asp-action="Edicion" method="post" enctype="multipart/form-data">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
     <input type="hidden" asp-for="ID_usuario" />
@@ -23,8 +28,7 @@
         <span asp-validation-for="Email" class="text-danger"></span>
     </div>
 
-    <!-- Solo se muestra el campo Rol si el usuario logueado es administrador -->
-    @if (ViewBag.EsAdministrador != null && (bool)ViewBag.EsAdministrador)
+    @if (esAdministrador && !esPropioPerfil)
     {
         <div class="form-group">
             <label asp-for="Rol" class="control-label"></label>
@@ -33,13 +37,6 @@
                 <option value="2">Empleado</option>
             </select>
             <span asp-validation-for="Rol" class="text-danger"></span>
-        </div>
-    }
-    else
-    {
-        <div class="form-group">
-            <label asp-for="Rol" class="control-label"></label>
-            <input asp-for="Rol" class="form-control" readonly />
         </div>
     }
 
@@ -53,10 +50,17 @@
     </div>
 
     <div class="form-group">
-        <label asp-for="AvatarFile" class="control-label">Avatar (opcional)</label>
+        <label asp-for="AvatarFile" class="control-label">Cambiar Avatar (opcional)</label>
         <input asp-for="AvatarFile" type="file" class="form-control" />
         <span asp-validation-for="AvatarFile" class="text-danger"></span>
     </div>
+
+    <div>
+        <img src="@Model.Avatar" alt="Avatar" />
+        <input type="checkbox" name="eliminarAvatar" value="true" /> Eliminar Avatar
+    </div>
+
+
 
     <div class="form-group">
         <button type="submit" class="btn btn-primary">Guardar cambios</button>

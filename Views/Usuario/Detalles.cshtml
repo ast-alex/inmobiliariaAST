@@ -39,9 +39,11 @@
     </div>
     <div class="card-footer">
         <a asp-action="Index" class="btn btn-primary">Volver a la lista</a>
-        @if(ViewBag.EsAdministrador)
+        @if (ViewBag.EsAdministrador || (User.Identity?.Name == Model.Email))
         {
             <a asp-action="Edicion" asp-route-id="@Model.ID_usuario" class="btn btn-warning">Editar</a>    
         }
     </div>
 </div>
+
+

@@ -186,11 +186,12 @@ namespace inmobiliariaAST.Models
             {
                 string query = @"
                     UPDATE Usuario
-                    SET Avatar = NULL
+                    SET Avatar = @AvatarDefault
                     WHERE ID_usuario = @ID_usuario";
                     
                 using (var command = new MySqlCommand(query, connection))
                 {
+                    command.Parameters.AddWithValue("@AvatarDefault", Usuario.AvatarDefault);
                     command.Parameters.AddWithValue("@ID_usuario", id);
 
                     connection.Open();

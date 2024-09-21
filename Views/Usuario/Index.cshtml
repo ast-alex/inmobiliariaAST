@@ -31,18 +31,45 @@
                 <td>@usuario.Nombre</td>
                 <td>@usuario.Apellido</td>
                 <td>@(usuario.Estado == true ? "Activo" : "Inactivo")</td>
-                <td>
-                    <a asp-action="Detalles" asp-route-id="@usuario.ID_usuario" class="btn btn-info btn-sm">Detalles</a>
-                    @if (User.IsInRole("Administrador"))
+                @* <td>
+                    @if (usuario.Rol == (int)Roles.Administrador)
                     {
-                        <a asp-action="Edicion" asp-route-id="@usuario.ID_usuario" class="btn btn-warning btn-sm">Editar</a>
-                        <a asp-action="Eliminar" asp-route-id="@usuario.ID_usuario" class="btn btn-danger btn-sm">Eliminar</a>
+                        <span>Administrador</span>
                     }
-                </td>
+                    else if (usuario.Rol == (int)Roles.Empleado)
+                    {
+                        <span>Empleado</span>
+                    }
+                    else
+                    {
+                        <span>Rol desconocido</span>
+                    }
+                </td> *@
+                 <td>
+                <td>
+                @if (User.IsInRole("Administrador"))
+                {
+                    <a asp-action="Detalles" asp-route-id="@usuario.ID_usuario" class="btn btn-info btn-sm">Detalles</a>
+                    <a asp-action="Edicion" asp-route-id="@usuario.ID_usuario" class="btn btn-warning btn-sm">Editar</a>
+                    <form asp-action="Eliminar" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="@usuario.ID_usuario" />
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro que desea eliminar este usuario?');">Eliminar</button>
+                    </form>
+                }
+                else if (User.Identity?.Name == usuario.Email)
+                {
+                    <a asp-action="Edicion" asp-route-id="@usuario.ID_usuario" class="btn btn-warning btn-sm">Editar Mi Usuario</a>
+                }
+                else
+                {
+                    <span class="text-muted">Sin acciones disponibles</span>
+                }
+            </td>
             </tr>
         }
     </tbody>
 </table>
 
-
 <a href="@Url.Action("Crear", "Usuario")" class="btn btn-success">Agregar Usuario</a>
+
+

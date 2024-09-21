@@ -16,6 +16,8 @@ public class Usuario{
         [NotMapped]
         public IFormFile? AvatarFile { get; set; }
 
+        public const string AvatarDefault = "/uploads/avatars/default.jpg";
+
 }
 
 public enum Roles{

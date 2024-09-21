@@ -91,6 +91,12 @@ public class UsuarioController : Controller{
             usuarioLogeado = repo.GetByEmail(email);
         }
 
+        //ocultar perfiles de usuarios a empleados
+        if(usuarioLogeado != null && usuarioLogeado.Rol == (int)Roles.Empleado && usuario.ID_usuario != usuarioLogeado.ID_usuario)
+        {
+            return RedirectToAction("AccessDenied" , "Auth");
+        }
+
         ViewBag.EsAdministrador = usuarioLogeado != null && usuarioLogeado.Rol == (int)Roles.Administrador;
 
         return View(usuario);
@@ -136,6 +142,8 @@ public class UsuarioController : Controller{
 
                 // Guardar la ruta del archivo en la propiedad Avatar
                 usuario.Avatar = "/uploads/avatars/" + uniqueFileName;
+            }else{
+                usuario.Avatar = Usuario.AvatarDefault;
             }
 
             if (!string.IsNullOrEmpty(usuario.Password))
@@ -148,12 +156,11 @@ public class UsuarioController : Controller{
         }
         return View(usuario);
     }
-
-    //edicion
+    //GETedicion
     public IActionResult Edicion(int id)
     {
         var usuario = repo.GetID(id);
-        if(usuario==null)
+        if (usuario == null)
         {
             return NotFound();
         }
@@ -166,62 +173,41 @@ public class UsuarioController : Controller{
             usuarioLogeado = repo.GetByEmail(email);
         }
 
-        if (usuarioLogeado != null)
-        {
-            ViewBag.EsAdministrador = usuarioLogeado.Rol == (int)Roles.Administrador;
-        }
-        else
-        {
-            ViewBag.EsAdministrador = false;
-        }
+        ViewBag.EsAdministrador = usuarioLogeado?.Rol == (int)Roles.Administrador;
+        ViewBag.esPropioPerfil = usuarioLogeado?.Email == usuario.Email;
 
         return View(usuario);
     }
-
+    
     //post
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Edicion(int id, Usuario usuario)
+    public IActionResult Edicion(int id, Usuario usuario, bool eliminarAvatar)
     {
-        
         if (id != usuario.ID_usuario)
         {
             return NotFound();
         }
 
-        var email = User.Identity?.Name;
-        Usuario? usuarioLogeado = null;
-
-        if (!string.IsNullOrEmpty(email))
-        {
-            usuarioLogeado = repo.GetByEmail(email);
+        if(eliminarAvatar){
+            repo.EliminarAvatar(usuario.ID_usuario);
         }
 
         var usuarioActual = repo.GetID(id);
-
         if (usuarioActual == null)
         {
             return NotFound();
         }
 
         ModelState.Remove("Password");
-        
 
         if (ModelState.IsValid)
         {
-            // Si no es administrador, se impide modificar el rol
-            if (usuarioLogeado != null && usuarioLogeado.Rol != (int)Roles.Administrador)
-            {
-                usuario.Rol = usuarioActual.Rol; // Se mantiene el rol actual si no es administrador
-            }
-            
-            usuario.Password = usuarioActual.Password; // Mantener la contraseña actual
-
-            // Procesar la subida del archivo (actualización del avatar)
+            // Manejo del Avatar
             if (usuario.AvatarFile != null && usuario.AvatarFile.Length > 0)
             {
+                // Procesar la carga del nuevo avatar
                 var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\uploads\\avatars");
-
                 if (!Directory.Exists(uploadsFolder))
                 {
                     Directory.CreateDirectory(uploadsFolder);
@@ -235,28 +221,46 @@ public class UsuarioController : Controller{
                     usuario.AvatarFile.CopyTo(fileStream);
                 }
 
-                usuario.Avatar = "/uploads/avatars/" + uniqueFileName;
+                usuario.Avatar = "/uploads/avatars/" + uniqueFileName; // Actualiza el avatar
             }
             else
             {
-                usuario.Avatar = usuarioActual.Avatar; // Mantener el avatar actual si no se sube uno nuevo
+                usuario.Avatar = usuarioActual.Avatar; // Mantiene el avatar actual si no se ha subido uno nuevo
             }
-        
+
+            // Mantener la contraseña actual
+            usuario.Password = usuarioActual.Password;
+
+            // Validación del estado
+            var email = User.Identity?.Name;
+            Usuario? usuarioLogeado = null;
+
+            if (!string.IsNullOrEmpty(email))
+            {
+                usuarioLogeado = repo.GetByEmail(email);
+            }
+
+            if (usuarioLogeado != null)
+            {
+                // No permitir al usuario cambiar su propio rol
+                if (usuarioLogeado.Email == usuario.Email)
+                {
+                    usuario.Rol = usuarioActual.Rol; // Mantener el rol actual si es su propio perfil
+                }
+
+                // Mantener el estado actual si no es administrador
+                if (usuarioLogeado.Rol != (int)Roles.Administrador)
+                {
+                    usuario.Estado = usuarioActual.Estado;
+                }
+            }
+
             // Actualizar los demás campos
             repo.ActualizarUsuario(usuario);
             return RedirectToAction(nameof(Index));
         }
 
-        // Si hay un usuario logueado, pasar un indicador a la vista si es administrador
-        if (usuarioLogeado != null)
-        {
-            ViewBag.EsAdministrador = usuarioLogeado.Rol == (int)Roles.Administrador;
-        }
-        else
-        {
-            ViewBag.EsAdministrador = false;
-        }
-            return View(usuario);
+        return View(usuario);
     }
 
     //eliminar
@@ -281,15 +285,6 @@ public class UsuarioController : Controller{
         return RedirectToAction(nameof(Index));
     }
 
-    //post eliminar
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    [Authorize(Roles = "Administrador")]
-    public IActionResult EliminarAvatar(int id)
-    {
-        repo.EliminarAvatar(id);
-        return RedirectToAction(nameof(Detalles), new {id});
-    }
 
     //verifico si usuario es admin
     private bool EsAdministrador()
