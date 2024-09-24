@@ -152,6 +152,7 @@ public class UsuarioController : Controller{
             }
             //usuario.Password = _authService.HashPassword(usuario.Password);
             var id = repo.Alta(usuario);
+            TempData["SuccessMessage"] = "Usuario creado exitosamente";
             return RedirectToAction(nameof(Index));
         }
         return View(usuario);
@@ -257,6 +258,7 @@ public class UsuarioController : Controller{
 
             // Actualizar los demás campos
             repo.ActualizarUsuario(usuario);
+            TempData["SuccessMessage"] = "Cambios guardados exitosamente";
             return RedirectToAction(nameof(Index));
         }
 
@@ -272,16 +274,9 @@ public class UsuarioController : Controller{
         {
             return NotFound();
         }
-        return View(usuario);
-    }
-    
-    //post eliminar
-    
-    [HttpPost, ActionName("Eliminar")]
-    [ValidateAntiForgeryToken]
-    public IActionResult EliminarConfirmado(int id)
-    {
+
         repo.EliminarUsuario(id);
+
         return RedirectToAction(nameof(Index));
     }
 

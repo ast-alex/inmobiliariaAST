@@ -60,6 +60,7 @@ namespace inmobiliariaAST.Controllers{
                 //al crear un contrato deberia inicializarse como ACTIVO por defecto...
                 contrato.Estado = true;
                 repoContrato.Alta(contrato);
+                TempData["SuccessMessage"] = "Contrato creado exitosamente";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -118,6 +119,7 @@ namespace inmobiliariaAST.Controllers{
             if(ModelState.IsValid)
             {
                 repoContrato.Modificar(contrato);
+                TempData["SuccessMessage"] = "Cambios guardados exitosamente";
                 return RedirectToAction(nameof(Index));
             }
 

@@ -47,10 +47,51 @@
                     <a href="@Url.Action("Edicion", new { id = inmueble.ID_inmueble })" class="btn btn-warning btn-sm">Editar</a>
                      @if (User.IsInRole("Administrador"))
                     {
-                        <a href="@Url.Action("Eliminar", new { id = inmueble.ID_inmueble})" class="btn btn-danger btn-sm" onclick="return confirm('Seguro de eliminar Inmueble?');">Eliminar</a>
+                        //<a href="@Url.Action("Eliminar", new { id = inmueble.ID_inmueble})" class="btn btn-danger btn-sm" onclick="return confirm('Seguro de eliminar Inmueble?');">Eliminar</a>
+                        <input type="button" value="Eliminar" class="btn btn-danger btn-sm" onclick="eliminar(@inmueble.ID_inmueble, '@inmueble.Direccion')" />
                     }
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+@section Scripts {
+<script>
+	function eliminar(id, direccion) {
+            Swal.fire({
+                title: `¿Estás seguro de eliminar al Inmueble: ${direccion}?`,
+                text: "No podrás revertir esta acción",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Sí, eliminar",
+                cancelButtonText: "Cancelar"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title:"Deleted!",
+                        text:"El Inmueble ha sido eliminado",
+                        icon: "succes"
+                    })
+                    // Redirige a la acción de eliminar
+                    window.location.href = '/Inmueble/Eliminar/' + id;
+                }
+            });
+        }
+        // Verificamos si hay un mensaje de éxito desde TempData
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <text>
+                Swal.fire({
+                    title: '¡Éxito!',
+                    text: '@TempData["SuccessMessage"]',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+            </text>
+        }
+</script>
+
+}

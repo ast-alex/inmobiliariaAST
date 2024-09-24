@@ -57,6 +57,7 @@ namespace inmobiliariaAST.Controllers
 
                 pago.Estado = true;
                 repo.Alta(pago);
+                 TempData["SuccessMessage"] = "Pago agregado exitosamente";
                 return RedirectToAction(nameof(Index));
             }
             
@@ -88,6 +89,7 @@ namespace inmobiliariaAST.Controllers
             if (ModelState.IsValid)
             {
                 repo.EditarPago(pago);
+                TempData["SuccessMessage"] = "Cambios guardados exitosamente";
                 return RedirectToAction("Index", new {id = pago.ID_contrato});
             }
             return View();

@@ -53,7 +53,8 @@
                     <a asp-action="Edicion" asp-route-id="@usuario.ID_usuario" class="btn btn-warning btn-sm">Editar</a>
                     <form asp-action="Eliminar" method="post" style="display:inline;">
                         <input type="hidden" name="id" value="@usuario.ID_usuario" />
-                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro que desea eliminar este usuario?');">Eliminar</button>
+                        @* <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro que desea eliminar este usuario?');">Eliminar</button> *@
+                        <button type="button" class="btn btn-danger btn-sm" onclick="eliminar(@usuario.ID_usuario, '@usuario.Nombre')">Eliminar</button>
                     </form>
                 }
                 else if (User.Identity?.Name == usuario.Email)
@@ -72,4 +73,43 @@
 
 <a href="@Url.Action("Crear", "Usuario")" class="btn btn-success">Agregar Usuario</a>
 
+
+@section Scripts{
+    <script>
+        function eliminar(id, nombre) {
+            Swal.fire({
+                title: `¿Estás seguro de dar de baja al Usuario: ${id, nombre}?`,
+                text: "No podrás revertir esta acción",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Sí, dar de baja.",
+                cancelButtonText: "Cancelar"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title:"Deleted!",
+                        text:"El Usuario ha sido dado de baja",
+                        icon: "succes"
+                    })
+                    // Redirige a la acción de eliminar
+                    window.location.href = '/Usuario/Eliminar/' + id;
+                }
+            });
+        }
+        // Verificamos si hay un mensaje de éxito desde TempData
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <text>
+                Swal.fire({
+                    title: '¡Éxito!',
+                    text: '@TempData["SuccessMessage"]',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+            </text>
+        }
+</script>
+}
 

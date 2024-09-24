@@ -49,6 +49,7 @@ namespace inmobiliariaAST.Controllers
             if (ModelState.IsValid)
             {
                 repo.Alta(inmueble); // Usamos repo.Alta para insertar un nuevo inmueble
+                TempData["SuccessMessage"] = "Inmueble creado exitosamente";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -81,7 +82,6 @@ namespace inmobiliariaAST.Controllers
 
             // Cargar lista de propietarios para el dropdown en la vista
             ViewBag.Propietarios = propietarios;
-
             return View(inmueble);
         }
 
@@ -95,6 +95,7 @@ namespace inmobiliariaAST.Controllers
             {
                 // Llamar al repositorio para modificar el inmueble
                 repo.Modificar(inmueble);
+                TempData["SuccessMessage"] = "Cambios guardados exitosamente";
                 return RedirectToAction("Index"); 
             }
 

@@ -30,6 +30,7 @@ public class PropietarioController : Controller
         else
         {
             var propietario = repo.Get(id);
+            TempData["SuccessMessage"] = "Cambios guardados exitosamente";
             return View(propietario);
         }
     }
