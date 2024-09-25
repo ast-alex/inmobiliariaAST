@@ -4,49 +4,57 @@
     ViewData["Title"] = "Editar Inquilino";
 }
 
-<h4>Editar Inquilino</h4>
-<hr />
-<div class="row">
-    <div class="col-md-6">
-        <form asp-action="Guardar" method="post">
-            <input type="hidden" asp-for="ID_inquilino" />
-            <div class="form-group">
-                <label asp-for="DNI" class="control-label"></label>
-                <input asp-for="DNI" class="form-control" />
-                <span asp-validation-for="DNI" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Nombre" class="control-label"></label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Apellido" class="control-label"></label>
-                <input asp-for="Apellido" class="form-control" />
-                <span asp-validation-for="Apellido" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Telefono" class="control-label"></label>
-                <input asp-for="Telefono" class="form-control" />
-                <span asp-validation-for="Telefono" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Direccion" class="control-label"></label>
-                <input asp-for="Direccion" class="form-control" />
-                <span asp-validation-for="Direccion" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Guardar" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+<div class="container mt-4">
+    <h4 class="text-center">@ViewData["Title"]</h4>
+    <hr />
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <form asp-action="Guardar" method="post" class="form-container">
+                <input type="hidden" asp-for="ID_inquilino" />
+                <div class="form-group">
+                    <label asp-for="DNI" class="control-label"></label>
+                    <input asp-for="DNI" class="form-control" placeholder="Ingrese DNI" />
+                    <span asp-validation-for="DNI" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Nombre" class="control-label"></label>
+                    <input asp-for="Nombre" class="form-control" placeholder="Ingrese Nombre" />
+                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Apellido" class="control-label"></label>
+                    <input asp-for="Apellido" class="form-control" placeholder="Ingrese Apellido" />
+                    <span asp-validation-for="Apellido" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Telefono" class="control-label"></label>
+                    <input asp-for="Telefono" class="form-control" placeholder="Ingrese Teléfono" />
+                    <span asp-validation-for="Telefono" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" class="form-control" placeholder="Ingrese Email" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Direccion" class="control-label"></label>
+                    <input asp-for="Direccion" class="form-control" placeholder="Ingrese Dirección" />
+                    <span asp-validation-for="Direccion" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Estado" class="control-label"></label>
+                    <input asp-for="Estado" type="checkbox" class="form-check-input" />
+                    <span asp-validation-for="Estado" class="text-danger"></span>
+                </div>
 
-<div>
-    <a asp-action="Index">Volver</a>
+                <div class="form-group text-center">
+                    <input type="submit" value="Guardar" class="btn btn-primary btn-lg" />
+                </div>
+
+            </form>
+        </div>
+    </div
+    <div class="text-center mt-3 mb-5">
+        <a asp-action="Index" class="btn btn-secondary">Volver</a>
+    </div>
 </div>
