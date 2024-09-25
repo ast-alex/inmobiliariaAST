@@ -20,14 +20,16 @@ public class RepositorioInmueble{
                     i.Latitud as Latitud,
                     i.Longitud AS Longitud,
                     i.Precio AS Price,
-                    i.Estado AS STATUs,
+                    i.Estado ,
                     p.ID_propietario,
                     p.Nombre AS Propietario_Nombre,
                     p.Apellido AS Propietario_Apellido
                 FROM 
                     Inmueble i
                 JOIN 
-                    Propietario p ON i.ID_propietario = p.ID_propietario;";
+                    Propietario p ON i.ID_propietario = p.ID_propietario
+                WHERE 
+                    i.Estado = 1;";
             
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
@@ -144,7 +146,7 @@ public class RepositorioInmueble{
                 command.Parameters.AddWithValue("@latitud", inmueble.Latitud.HasValue ? (object)inmueble.Latitud.Value : DBNull.Value);
                 command.Parameters.AddWithValue("@longitud", inmueble.Longitud.HasValue ? (object)inmueble.Longitud.Value : DBNull.Value);
                 command.Parameters.AddWithValue("@precio", inmueble.Precio);
-                command.Parameters.AddWithValue("@estado", inmueble.Estado.ToString());
+                command.Parameters.AddWithValue("@estado", true);
                 command.Parameters.AddWithValue("@id_propietario", inmueble.ID_propietario);
                 
                 connection.Open();
@@ -170,9 +172,8 @@ public class RepositorioInmueble{
                         Latitud = @latitud,
                         Longitud = @longitud,
                         Precio = @precio,
-                        Estado = @estado,
                         ID_propietario = @id_propietario
-                        WHERE ID_inmueble = @id;";
+                        WHERE ID_inmueble = @id ;";
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
                 command.Parameters.AddWithValue("@id", inmueble.ID_inmueble);
@@ -183,7 +184,7 @@ public class RepositorioInmueble{
                 command.Parameters.AddWithValue("@latitud", inmueble.Latitud.HasValue ? (object)inmueble.Latitud.Value : DBNull.Value);
                 command.Parameters.AddWithValue("@longitud", inmueble.Longitud.HasValue ? (object)inmueble.Longitud.Value : DBNull.Value);
                 command.Parameters.AddWithValue("@precio", inmueble.Precio);
-                command.Parameters.AddWithValue("@estado", inmueble.Estado.ToString());
+                // command.Parameters.AddWithValue("@estado", inmueble.Estado.ToString());
                 command.Parameters.AddWithValue("@id_propietario", inmueble.ID_propietario);
                 
                 connection.Open();
@@ -201,7 +202,7 @@ public class RepositorioInmueble{
         int res = -1;
         using (MySqlConnection connection = new MySqlConnection(ConnectionString))
         {
-            var query = "DELETE FROM inmueble WHERE ID_inmueble = @id;";
+            var query = "UPDATE inmueble SET Estado = 0  WHERE ID_inmueble = @id;";
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
                 command.Parameters.AddWithValue("@id", id);

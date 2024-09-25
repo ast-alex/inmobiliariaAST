@@ -93,6 +93,11 @@ namespace inmobiliariaAST.Controllers
         {
             if (ModelState.IsValid)
             {
+                var inmuebleExists = repo.Get(inmueble.ID_inmueble);
+                if(inmuebleExists != null){
+                    inmueble.Estado = inmueble.Estado;
+                }
+                
                 // Llamar al repositorio para modificar el inmueble
                 repo.Modificar(inmueble);
                 TempData["SuccessMessage"] = "Cambios guardados exitosamente";
@@ -107,7 +112,7 @@ namespace inmobiliariaAST.Controllers
                 }).ToList();
 
             // En caso de error, recargar la lista de propietarios para el dropdown
-            ViewBag.Propietarios = repoPropietario.GetPropietarios();
+            ViewBag.Propietarios = propietarios;
 
             return View(inmueble);
         }
