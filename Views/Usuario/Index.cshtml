@@ -13,8 +13,8 @@
     }
 </p>
 
-<table class="table">
-    <thead>
+<table class="table table-striped table-bordered">
+    <thead class="thead-dark">
         <tr>
             <th>Email</th>
             <th>Nombre</th>
@@ -31,40 +31,22 @@
                 <td>@usuario.Nombre</td>
                 <td>@usuario.Apellido</td>
                 <td>@(usuario.Estado == true ? "Activo" : "Inactivo")</td>
-                @* <td>
-                    @if (usuario.Rol == (int)Roles.Administrador)
+                <td>
+                    @if (User.IsInRole("Administrador"))
                     {
-                        <span>Administrador</span>
+                        <a asp-action="Detalles" asp-route-id="@usuario.ID_usuario" class="btn btn-info btn-sm">Detalles</a>
+                        <a asp-action="Edicion" asp-route-id="@usuario.ID_usuario" class="btn btn-warning btn-sm">Editar</a>
+                        <button type="button" class="btn btn-danger btn-sm" onclick="eliminar(@usuario.ID_usuario, '@usuario.Nombre')">Eliminar</button>
                     }
-                    else if (usuario.Rol == (int)Roles.Empleado)
+                    else if (User.Identity?.Name == usuario.Email)
                     {
-                        <span>Empleado</span>
+                        <a asp-action="Edicion" asp-route-id="@usuario.ID_usuario" class="btn btn-warning btn-sm">Editar Mi Usuario</a>
                     }
                     else
                     {
-                        <span>Rol desconocido</span>
+                        <span class="text-muted">Sin acciones disponibles</span>
                     }
-                </td> *@
-                <td>
-                @if (User.IsInRole("Administrador"))
-                {
-                    <a asp-action="Detalles" asp-route-id="@usuario.ID_usuario" class="btn btn-info btn-sm">Detalles</a>
-                    <a asp-action="Edicion" asp-route-id="@usuario.ID_usuario" class="btn btn-warning btn-sm">Editar</a>
-                    <form asp-action="Eliminar" method="post" style="display:inline;">
-                        <input type="hidden" name="id" value="@usuario.ID_usuario" />
-                        @* <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro que desea eliminar este usuario?');">Eliminar</button> *@
-                        <button type="button" class="btn btn-danger btn-sm" onclick="eliminar(@usuario.ID_usuario, '@usuario.Nombre')">Eliminar</button>
-                    </form>
-                }
-                else if (User.Identity?.Name == usuario.Email)
-                {
-                    <a asp-action="Edicion" asp-route-id="@usuario.ID_usuario" class="btn btn-warning btn-sm">Editar Mi Usuario</a>
-                }
-                else
-                {
-                    <span class="text-muted">Sin acciones disponibles</span>
-                }
-            </td>
+                </td>
             </tr>
         }
     </tbody>
@@ -72,12 +54,11 @@
 
 <a href="@Url.Action("Crear", "Usuario")" class="btn btn-success">Agregar Usuario</a>
 
-
-@section Scripts{
+@section Scripts {
     <script>
         function eliminar(id, nombre) {
             Swal.fire({
-                title: `¿Estás seguro de dar de baja al Usuario: ${id, nombre}?`,
+                title: `¿Estás seguro de dar de baja al Usuario: ${nombre}?`,
                 text: "No podrás revertir esta acción",
                 icon: "warning",
                 showCancelButton: true,
@@ -87,17 +68,11 @@
                 cancelButtonText: "Cancelar"
             }).then((result) => {
                 if (result.isConfirmed) {
-                    Swal.fire({
-                        title:"Deleted!",
-                        text:"El Usuario ha sido dado de baja",
-                        icon: "succes"
-                    })
-                    // Redirige a la acción de eliminar
                     window.location.href = '/Usuario/Eliminar/' + id;
                 }
             });
         }
-        // Verificamos si hay un mensaje de éxito desde TempData
+
         @if (TempData["SuccessMessage"] != null)
         {
             <text>
@@ -109,6 +84,5 @@
                 });
             </text>
         }
-</script>
+    </script>
 }
-

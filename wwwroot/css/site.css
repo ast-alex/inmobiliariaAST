@@ -47,9 +47,6 @@ html {
   min-height: 100%;
 }
 
-/* body {
-  margin-bottom: 60px;
-} */
 
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Montserrat', sans-serif;
@@ -59,8 +56,9 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Navbar */
 .navbar {
-  background-color: var(--color-primary);
+  background-color: var(--color-primary); 
   padding: 15px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
 }
 
 .navbar .container {
@@ -72,7 +70,7 @@ h1, h2, h3, h4, h5, h6 {
 .navbar .logo a {
   font-size: 24px;
   font-weight: bold;
-  color: #FFFFFF;
+  color: #FFFFFF; 
   text-decoration: none;
 }
 
@@ -87,15 +85,17 @@ h1, h2, h3, h4, h5, h6 {
 
 .nav-links a {
   text-decoration: none;
-  color: #FFFFFF;
+  color: #FFFFFF; 
   font-weight: 600;
+  padding: 8px 15px; 
+  transition: background-color 0.3s, color 0.3s; /* Transición suave */
 }
 
 .nav-links a:hover {
-  color: var(--color-accent);
+  color: var(--color-accent); 
+  background-color: rgba(255, 255, 255, 0.2); 
+  border-radius: 4px; 
 }
-
-
 
 .footer {
   position: relative; 

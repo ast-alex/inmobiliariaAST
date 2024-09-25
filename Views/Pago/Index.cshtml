@@ -5,19 +5,19 @@
     var estadoSelect = ViewBag.EstadoSelect as bool?;
 }
 
-<h2>Listado de Pagoss</h2>
+<h2>@ViewBag.Title</h2>
 
 <!-- Dropdown para filtrar por estado -->
-<form method="get" action="@Url.Action("Index", "Pago")">
-    <select name="estado" id="estadoSelect" onchange="this.form.submit()">
+<form method="get" action="@Url.Action("Index", "Pago")" class="mb-3">
+    <select name="estado" id="estadoSelect" onchange="this.form.submit()" class="form-select">
         <option value="">Todos los Pagos</option>
-        <option value="true" >Pagos Activos</option>
+        <option value="true">Pagos Activos</option>
         <option value="false">Pagos Anulados</option>
     </select>
 </form>
 
-<table class="table">
-    <thead>
+<table class="table table-striped table-bordered">
+    <thead class="thead-dark">
         <tr>
             <th>Número de Pago</th>
             <th>Inquilino</th>
@@ -39,7 +39,7 @@
                 <td>@pago.Fecha_pago.ToShortDateString()</td>
                 <td>@pago.Importe</td>
                 <td>@pago.Concepto</td>
-                 <td>
+                <td>
                     @if (pago.Estado)
                     {
                         <span class="badge bg-success">Activo</span>
@@ -50,12 +50,11 @@
                     }
                 </td>
                 <td>
-                    <a href="@Url.Action("Detalles", "Pago", new { id = pago.ID_pago })" class="btn btn-info">Detalles</a>
-                    <a href="@Url.Action("Edicion", "Pago", new { id = pago.ID_pago })" class="btn btn-warning">Editar</a>
+                    <a href="@Url.Action("Detalles", "Pago", new { id = pago.ID_pago })" class="btn btn-info btn-sm">Detalles</a>
+                    <a href="@Url.Action("Edicion", "Pago", new { id = pago.ID_pago })" class="btn btn-warning btn-sm">Editar</a>
                     @if(pago.Estado)
                     {
-                        //<a href="@Url.Action("Eliminar", "Pago", new { id = pago.ID_pago })" class="btn btn-danger">Eliminar</a>
-                        <input type="button" value="Eliminar" class="btn btn-danger btn-sm" onclick="eliminar(@pago.ID_pago)" />
+                        <button type="button" class="btn btn-danger btn-sm" onclick="eliminar(@pago.ID_pago)">Eliminar</button>
                     }
                 </td>
             </tr>
@@ -66,18 +65,8 @@
 <a href="@Url.Action("Crear", "Pago")" class="btn btn-success">Agregar Pago</a>
 <a href="@Url.Action("Index", "Contrato")" class="btn btn-primary">Volver a Contratos</a>
 
-
-<script>
-    document.addEventListener("DOMContentLoaded", function(){
-        var estadoSelect = 'ViewBag.EstadoSelect';
-        var selectElement = document.getElementById('estadoSelect');
-        if(estadoSelect === true || estadoSelect === 'false'){
-            selectElement.value = estadoSelect;
-        }
-    });
-</script>
-
-<script>
+@section Scripts {
+    <script>
         function eliminar(id) {
             Swal.fire({
                 title: `¿Estás seguro de anular el Pago N:${id}?`,
@@ -90,17 +79,11 @@
                 cancelButtonText: "Cancelar"
             }).then((result) => {
                 if (result.isConfirmed) {
-                    Swal.fire({
-                        title:"Deleted!",
-                        text:"El Pago ha sido anulado",
-                        icon: "succes"
-                    })
-                    // Redirige a la acción de eliminar
                     window.location.href = '/Pago/Eliminar/' + id;
                 }
             });
         }
-        // Verificamos si hay un mensaje de éxito desde TempData
+
         @if (TempData["SuccessMessage"] != null)
         {
             <text>
@@ -112,5 +95,5 @@
                 });
             </text>
         }
-</script>
-
+    </script>
+}

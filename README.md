@@ -1,5 +1,5 @@
 ### FALTA.... 
 
 
-admin: admin@gmail.com - admin123
-empleado: empleado@gmail.com - root
+### Administrador: admin@gmail.com - admin123
+### Empleado: empleado@gmail.com - root
