@@ -8,50 +8,54 @@
     <h1 class="display-4">Detalles del Inmueble</h1>
 </div>
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                <label>Direccion:</label>
-                <p>@Model.Direccion</p>
-            </div>
-            <div class="form-group">
-                <label>Latitud:</label>
-                <p>@Model.Latitud</p>
-            </div>
-            <div class="form-group">
-                <label>Longitud:</label>
-                <p>@Model.Longitud</p>
-            </div>
-            <div class="form-group">
-                <label>Uso:</label>
-                <p>@Model.Uso</p>
-            </div>
-            <div class="form-group">
-                <label>Tipo:</label>
-                <p>@Model.Tipo</p>
-            </div>
-            <div class="form-group">
-                <label>Cantidad de Ambientes:</label>
-                <p>@Model.Cantidad_Ambientes</p>
-            </div>
-            <div class="form-group">
-                <label>Precio:</label>
-                <p>@Model.Precio</p>
-            </div>
-            <div class="form-group">
-                <label>Estado:</label>
-                <p>@Model.Estado</p>
-            </div>
-            <div class="form-group">
-                <label>Propietario:</label>
-                <p>@Model.Propietario?.Nombre @Model.Propietario?.Apellido</p>
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h5>Dirección: @Model.Direccion</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Latitud:</label>
+                        <p class="form-control-plaintext">@Model.Latitud</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Longitud:</label>
+                        <p class="form-control-plaintext">@Model.Longitud</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Uso:</label>
+                        <p class="form-control-plaintext">@Model.Uso</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo:</label>
+                        <p class="form-control-plaintext">@Model.Tipo</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Cantidad de Ambientes:</label>
+                        <p class="form-control-plaintext">@Model.Cantidad_Ambientes</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Precio:</label>
+                        <p class="form-control-plaintext">@Model.Precio</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Estado:</label>
+                        <p class="form-control-plaintext">@Model.Estado</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Propietario:</label>
+                        <p class="form-control-plaintext">@Model.Propietario?.Nombre @Model.Propietario?.Apellido</p>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-
-    <div class="form-group">
-        <a href="@Url.Action("Index")" class="btn btn-primary">Volver a la lista</a>
-        <a href="@Url.Action("Edicion", new { id = Model.ID_inmueble })" class="btn btn-warning">Editar</a>
+        <div class="card-footer text-right">
+            <a href="@Url.Action("Index")" class="btn btn-primary">Volver a la lista</a>
+            <a href="@Url.Action("Edicion", new { id = Model.ID_inmueble })" class="btn btn-warning">Editar</a>
+        </div>
     </div>
 </div>

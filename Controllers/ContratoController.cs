@@ -159,6 +159,7 @@ namespace inmobiliariaAST.Controllers{
         public IActionResult Eliminar(int id)
         {
             repoContrato.Eliminar(id);
+            TempData["SuccessMessage"] = "Contrato dado de baja correctamente";
             return RedirectToAction(nameof(Index));
         }
 

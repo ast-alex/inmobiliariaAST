@@ -8,58 +8,61 @@
     <h1 class="display-4">Detalles de Contrato</h1>
 </div>
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                <label>Contrato N°:</label>
-                <p>@Model.ID_contrato</p>
-            </div>
-            <div class="form-group">
-                <label>Inmueble:</label>
-                <p>@Model.InmuebleDireccion</p>
-            </div>
-            <div class="form-group">
-                <label>Inquilino:</label>
-                <p>@Model.InquilinoNombreCompleto</p>
-            </div>
-            <div class="form-group">
-                <label>Fecha de Inicio:</label>
-                <p>@Model.Fecha_Inicio.ToShortDateString()</p>
-            </div>
-            <div class="form-group">
-                <label>Fecha de Finalizacion:</label>
-                <p>@Model.Fecha_Fin.ToShortDateString()</p>
-            </div>
-            <div class="form-group">
-                <label>Monto Mensual:</label>
-                <p>@Model.Monto_Mensual.ToString("C")</p>
-            </div>
-            <div class="form-group">
-                <label>Estado:</label>
-                <p>@(Model.Estado? "Activo" : "Inactivo")</p>
-            </div>
-            
-            @if(Model.Fecha_Terminacion_Anticipada.HasValue)
-            {
-                <div class="form-group">
-                    <label>Fecha de Terminacion Anticipada:</label>
-                    <p>@Model.Fecha_Terminacion_Anticipada.Value.ToShortDateString()</p>
-                </div>
-            }
-            @if(Model.Multa.HasValue)
-            {
-                <div class="form-group">
-                    <label>Multa:</label>
-                    <p>@Model.Multa.Value.ToString("C")</p>
-                </div>
-            }
-
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h5>Contrato N°: @Model.ID_contrato</h5>
         </div>
-    </div>
-
-    <div class="form-group">
-        <a href="@Url.Action("Index")" class="btn btn-primary">Volver a la lista</a>
-        <a href="@Url.Action("Edicion", new { id = Model.ID_contrato })" class="btn btn-warning">Editar</a>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Inmueble:</label>
+                        <p class="form-control-plaintext">@Model.InmuebleDireccion</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Inquilino:</label>
+                        <p class="form-control-plaintext">@Model.InquilinoNombreCompleto</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Fecha de Inicio:</label>
+                        <p class="form-control-plaintext">@Model.Fecha_Inicio.ToShortDateString()</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Fecha de Finalización:</label>
+                        <p class="form-control-plaintext">@Model.Fecha_Fin.ToShortDateString()</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Monto Mensual:</label>
+                        <p class="form-control-plaintext">@Model.Monto_Mensual.ToString("C")</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Estado:</label>
+                        <p class="form-control-plaintext">@(Model.Estado ? "Activo" : "Inactivo")</p>
+                    </div>
+                    
+                    @if(Model.Fecha_Terminacion_Anticipada.HasValue)
+                    {
+                        <div class="form-group">
+                            <label>Fecha de Terminación Anticipada:</label>
+                            <p class="form-control-plaintext">@Model.Fecha_Terminacion_Anticipada.Value.ToShortDateString()</p>
+                        </div>
+                    }
+                    @if(Model.Multa.HasValue)
+                    {
+                        <div class="form-group">
+                            <label>Multa:</label>
+                            <p class="form-control-plaintext">@Model.Multa.Value.ToString("C")</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="card-footer text-right">
+            <a href="@Url.Action("Index")" class="btn btn-primary">Volver a la lista</a>
+            <a href="@Url.Action("Edicion", new { id = Model.ID_contrato })" class="btn btn-warning">Editar</a>
+        </div>
     </div>
 </div>

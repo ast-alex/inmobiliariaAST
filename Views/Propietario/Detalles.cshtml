@@ -8,39 +8,47 @@
     <h1 class="display-4">Detalles del Propietario</h1>
 </div>
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                <label>DNI:</label>
-                <p>@Model.DNI</p>
-            </div>
-            <div class="form-group">
-                <label>Nombre:</label>
-                <p>@Model.Nombre</p>
-            </div>
-            <div class="form-group">
-                <label>Apellido:</label>
-                <p>@Model.Apellido</p>
-            </div>
-            <div class="form-group">
-                <label>Teléfono:</label>
-                <p>@Model.Telefono</p>
-            </div>
-            <div class="form-group">
-                <label>Email:</label>
-                <p>@Model.Email</p>
-            </div>
-            <div class="form-group">
-                <label>Dirección:</label>
-                <p>@Model.Direccion</p>
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h5>@Model.Nombre @Model.Apellido</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>DNI:</label>
+                        <p class="form-control-plaintext">@Model.DNI</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Teléfono:</label>
+                        <p class="form-control-plaintext">@Model.Telefono</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <p class="form-control-plaintext">@Model.Email</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Nombre:</label>
+                        <p class="form-control-plaintext">@Model.Nombre</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Apellido:</label>
+                        <p class="form-control-plaintext">@Model.Apellido</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Dirección:</label>
+                        <p class="form-control-plaintext">@Model.Direccion</p>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-
-    <div class="form-group">
-        <a href="@Url.Action("Index")" class="btn btn-primary">Volver a la lista</a>
-        <a href="@Url.Action("Edicion", new { id = Model.ID_propietario })" class="btn btn-warning">Editar</a>
-        <!--<a href="@Url.Action("Eliminar", new { id = Model.ID_propietario })" class="btn btn-danger" onclick="return confirm('¿Estás seguro de eliminar este propietario?');">Eliminar</a>-->
+        <div class="card-footer text-right">
+            <a href="@Url.Action("Index")" class="btn btn-primary">Volver a la lista</a>
+            <a href="@Url.Action("Edicion", new { id = Model.ID_propietario })" class="btn btn-warning">Editar</a>
+            <!--<a href="@Url.Action("Eliminar", new { id = Model.ID_propietario })" class="btn btn-danger" onclick="return confirm('¿Estás seguro de eliminar este propietario?');">Eliminar</a>-->
+        </div>
     </div>
 </div>

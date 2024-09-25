@@ -6,14 +6,14 @@
 
 <div class="text-center">
     <h1 class="display-4">Lista de Inmuebles</h1>
-</div>	
+</div>
 
 <a href="@Url.Action("Crear")" class="btn btn-primary mb-3">Crear Nuevo Inmueble</a>
 
 <table class="table table-striped table-bordered">
     <thead>
         <tr>
-            <th>Direccion</th>
+            <th>Dirección</th>
             <th>Uso</th>
             <th>Tipo</th>
             <th>Ambientes</th>
@@ -31,23 +31,23 @@
                 <td>@inmueble.Uso</td>
                 <td>@inmueble.Tipo</td>
                 <td>@inmueble.Cantidad_Ambientes</td>
-                <td>@inmueble.Precio</td>
+                <td>@inmueble.Precio.ToString("C")</td>
                 <td>
-                    @if(inmueble.Estado)
-                    {
-                        <span>Disponible</span>
-                    }else
-                    {
-                        <span>No Disponible</span>
-                    }
+                @if (inmueble.Estado)
+                {
+                    <span class="badge bg-success">Disponible</span>
+                }
+                else
+                {
+                    <span class="badge bg-danger">No Disponible</span>
+                }
                 </td>
                 <td>@inmueble.Propietario?.Nombre @inmueble.Propietario?.Apellido</td>
                 <td>
-                    <a href="@Url.Action("Detalles", new { id = inmueble.ID_inmueble})" class="btn btn-info btn-sm">Detalles</a>
+                    <a href="@Url.Action("Detalles", new { id = inmueble.ID_inmueble })" class="btn btn-info btn-sm">Detalles</a>
                     <a href="@Url.Action("Edicion", new { id = inmueble.ID_inmueble })" class="btn btn-warning btn-sm">Editar</a>
-                     @if (User.IsInRole("Administrador"))
+                    @if (User.IsInRole("Administrador"))
                     {
-                        //<a href="@Url.Action("Eliminar", new { id = inmueble.ID_inmueble})" class="btn btn-danger btn-sm" onclick="return confirm('Seguro de eliminar Inmueble?');">Eliminar</a>
                         <input type="button" value="Eliminar" class="btn btn-danger btn-sm" onclick="eliminar(@inmueble.ID_inmueble, '@inmueble.Direccion')" />
                     }
                 </td>
@@ -58,40 +58,39 @@
 
 @section Scripts {
 <script>
-	function eliminar(id, direccion) {
-            Swal.fire({
-                title: `¿Estás seguro de eliminar al Inmueble: ${direccion}?`,
-                text: "No podrás revertir esta acción",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Sí, eliminar",
-                cancelButtonText: "Cancelar"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Swal.fire({
-                        title:"Deleted!",
-                        text:"El Inmueble ha sido eliminado",
-                        icon: "succes"
-                    })
-                    // Redirige a la acción de eliminar
-                    window.location.href = '/Inmueble/Eliminar/' + id;
-                }
-            });
-        }
-        // Verificamos si hay un mensaje de éxito desde TempData
-        @if (TempData["SuccessMessage"] != null)
-        {
-            <text>
+    function eliminar(id, direccion) {
+        Swal.fire({
+            title: `¿Estás seguro de eliminar al Inmueble: ${direccion}?`,
+            text: "No podrás revertir esta acción",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar"
+        }).then((result) => {
+            if (result.isConfirmed) {
                 Swal.fire({
-                    title: '¡Éxito!',
-                    text: '@TempData["SuccessMessage"]',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
+                    title: "Eliminado!",
+                    text: "El Inmueble ha sido eliminado",
+                    icon: "success"
+                }).then(() => {
+                    window.location.href = '/Inmueble/Eliminar/' + id;
                 });
-            </text>
-        }
-</script>
+            }
+        });
+    }
 
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <text>
+            Swal.fire({
+                title: '¡Éxito!',
+                text: '@TempData["SuccessMessage"]',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        </text>
+    }
+</script>
 }

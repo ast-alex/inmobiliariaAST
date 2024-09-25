@@ -6,9 +6,9 @@
 
 <div class="text-center">
     <h1 class="display-4">Listado de Contratos</h1>
-</div>	
+</div>
 
-<a class="btn btn-primary" asp-action="Crear">Crear nuevo Contrato</a>
+<a class="btn btn-primary mb-3" asp-action="Crear">Crear nuevo Contrato</a>
 
 <table class="table table-striped">
     <thead>
@@ -30,18 +30,26 @@
             {
                 <tr>
                     <td>@contrato.ID_contrato</td>
-                    <td>@contrato.InmuebleDireccion</td> <!-- Aquí podrías mostrar más información del inmueble si tienes relaciones -->
-                    <td>@contrato.InquilinoNombreCompleto</td> <!-- Similar para el inquilino -->
+                    <td>@contrato.InmuebleDireccion</td>
+                    <td>@contrato.InquilinoNombreCompleto</td>
                     <td>@contrato.Fecha_Inicio.ToShortDateString()</td>
                     <td>@contrato.Fecha_Fin.ToShortDateString()</td>
                     <td>@String.Format("{0:C}", contrato.Monto_Mensual)</td>
-                    <td>@(contrato.Estado ? "Activo" : "Inactivo")</td>
+                    <td>
+                    @if (contrato.Estado)
+                    {
+                        <span class="badge bg-success">Activo</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Inactivo</span>
+                    }
+                    </td>
                     <td>
                         <a class="btn btn-info" asp-action="Detalles" asp-route-id="@contrato.ID_contrato">Detalles</a>
-                            <a class="btn btn-warning" asp-action="Edicion" asp-route-id="@contrato.ID_contrato">Editar</a>
-                         @if (User.IsInRole("Administrador"))
+                        <a class="btn btn-warning" asp-action="Edicion" asp-route-id="@contrato.ID_contrato">Editar</a>
+                        @if (User.IsInRole("Administrador"))
                         {
-                            //<a class="btn btn-danger" asp-action="Eliminar" asp-route-id="@contrato.ID_contrato">Eliminar</a>
                             <input type="button" value="Eliminar" class="btn btn-danger btn-sm" onclick="eliminar(@contrato.ID_contrato)" />
                         }
                     </td>
@@ -57,42 +65,41 @@
     </tbody>
 </table>
 
-
-@section Scripts{
-    <script>
-        function eliminar(id) {
-            Swal.fire({
-                title: `¿Estás seguro de eliminar al Contrato N:${id}?`,
-                text: "No podrás revertir esta acción",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Sí, eliminar",
-                cancelButtonText: "Cancelar"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Swal.fire({
-                        title:"Deleted!",
-                        text:"El Contrato ha sido eliminado",
-                        icon: "succes"
-                    })
-                    // Redirige a la acción de eliminar
-                    window.location.href = '/Contrato/Eliminar/' + id;
-                }
-            });
-        }
-        // Verificamos si hay un mensaje de éxito desde TempData
-        @if (TempData["SuccessMessage"] != null)
-        {
-            <text>
+@section Scripts {
+<script>
+    function eliminar(id) {
+        Swal.fire({
+            title: `¿Estás seguro de eliminar el Contrato N:${id}?`,
+            text: "No podrás revertir esta acción",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar"
+        }).then((result) => {
+            if (result.isConfirmed) {
                 Swal.fire({
-                    title: '¡Éxito!',
-                    text: '@TempData["SuccessMessage"]',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
+                    title: "Eliminado!",
+                    text: "El Contrato ha sido eliminado",
+                    icon: "success"
+                }).then(() => {
+                    window.location.href = '/Contrato/Eliminar/' + id;
                 });
-            </text>
-        }
-    </script>
+            }
+        });
+    }
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <text>
+            Swal.fire({
+                title: '¡Éxito!',
+                text: '@TempData["SuccessMessage"]',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        </text>
+    }
+</script>
 }

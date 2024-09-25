@@ -21,7 +21,8 @@ namespace inmobiliariaAST.Models
                                         CONCAT(iq.Nombre, ' ', iq.Apellido) AS InquilinoNombreCompleto
                                 FROM Contrato c
                                 JOIN Inmueble i ON c.ID_inmueble = i.ID_inmueble
-                                JOIN Inquilino iq ON c.ID_inquilino = iq.ID_inquilino";
+                                JOIN Inquilino iq ON c.ID_inquilino = iq.ID_inquilino
+                                WHERE c.Estado = true AND iq.Estado = true";
 
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {

@@ -3,58 +3,49 @@
     ViewData["Title"] = "Lista de Propietarios";
 }
 
-<div class="text-center">
+<div class="text-center mb-4">
     <h1 class="display-4">Lista de Propietarios</h1>
-</div>			
+</div>
+
 <h4>
-	<a href="/Propietario/Edicion/">Agregar Nuevo Propietario</a>
+    <a href="/Propietario/Edicion/" class="btn btn-primary mb-3">Agregar Nuevo Propietario</a>
 </h4>
 
-<table class="table">
-	<thead>
-		<tr>
-			<th>DNI</th>
-			<th>Nombre</th>
-			<th>Apellido</th>
-			<th>Telefono</th>
-			<th>Email</th>
-			<th>Direccion</th>
-			<th>Acciones</th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach (var item in Model)
-		{
-			<tr>
-				 <td>
-                    @Html.DisplayFor(modelItem => item.DNI)
-                </td>
+<table class="table table-striped table-bordered mt-3">
+    <thead class="thead-light">
+        <tr>
+            <th>DNI</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Teléfono</th>
+            <th>Email</th>
+            <th>Dirección</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.DNI)</td>
+                <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
+                <td>@Html.DisplayFor(modelItem => item.Apellido)</td>
+                <td>@Html.DisplayFor(modelItem => item.Telefono)</td>
+                <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                <td>@Html.DisplayFor(modelItem => item.Direccion)</td>
+                <td>@Html.DisplayFor(modelItem => item.Estado)</td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Nombre)
+                    <a href="/Propietario/Detalles/@item.ID_propietario" class="btn btn-info btn-sm">Detalles</a>
+                    <a href="/Propietario/Edicion/@item.ID_propietario" class="btn btn-warning btn-sm">Editar</a>
+                    @if (User.IsInRole("Administrador"))
+                    {
+                        <input type="button" value="Eliminar" class="btn btn-danger btn-sm" onclick="eliminar(@item.ID_propietario, '@item.Nombre')" />
+                    }
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Apellido)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Telefono)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Email)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Direccion)
-                </td>
-				<td>
-					<a href="/Propietario/Detalles/@item.ID_propietario" class="btn btn-info btn-sm">Detalles</a>
-          <a href="/Propietario/Edicion/@item.ID_propietario" class="btn btn-warning btn-sm">Editar</a>
-					 @if (User.IsInRole("Administrador"))
-          {
-             <input type="button" value="Eliminar" class="btn btn-danger btn-sm" onclick="eliminar(@item.ID_propietario, '@item.Nombre')" />
-          }
-				</td>
-			</tr>
-		}
-	</tbody>
+            </tr>
+        }
+    </tbody>
 </table>
 
 @section Scripts {
@@ -72,10 +63,10 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     Swal.fire({
-                        title:"Deleted!",
+                        title:"¡Eliminado!",
                         text:"El Propietario ha sido eliminado",
-                        icon: "succes"
-                    })
+                        icon: "success"
+                    });
                     // Redirige a la acción de eliminar
                     window.location.href = '/Propietario/Eliminar/' + id;
                 }
@@ -97,4 +88,3 @@
         }
     </script>
 }
-
