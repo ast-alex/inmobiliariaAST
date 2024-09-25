@@ -15,4 +15,6 @@ public class Propietario
     public string Email { get; set; } = "";
 
     public string Direccion { get; set; } = "";
+
+    public bool Estado { get; set; }
 }

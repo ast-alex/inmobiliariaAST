@@ -63,8 +63,14 @@ namespace inmobiliariaAST.Controllers;
 
         [Authorize(Roles = "Administrador")]
         public IActionResult Eliminar(int id)
-        {
+        {   
+            var propietario = repo.Get(id);
+            if(propietario == null){
+                return NotFound();
+            }
+
             repo.Baja(id);
+            TempData["SuccessMessage"] = "El propietario ha sido dado de baja con sus activos relacionados.";
             return RedirectToAction(nameof(Index));
         }
     }

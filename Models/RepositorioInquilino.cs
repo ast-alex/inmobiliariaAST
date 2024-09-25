@@ -11,7 +11,7 @@ namespace inmobiliariaAST.Models
             List<Inquilino> inquilinos = new List<Inquilino>();
             using (MySqlConnection connection = new MySqlConnection(ConnectionString))
             {
-                var query = "SELECT Id_inquilino, DNI, Nombre, Apellido, Telefono, Email, Direccion FROM inquilino";
+                var query = "SELECT ID_inquilino, DNI, Nombre, Apellido, Telefono, Email, Direccion, Estado FROM inquilino WHERE Estado = true";
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     connection.Open();
@@ -26,7 +26,8 @@ namespace inmobiliariaAST.Models
                             Apellido = reader.GetString(3),
                             Telefono = reader.GetString(4),
                             Email = reader.GetString(5),
-                            Direccion = reader.GetString(6)
+                            Direccion = reader.GetString(6),
+                            Estado = reader.GetBoolean(7)
                         });
                     }
                     connection.Close();
@@ -40,7 +41,7 @@ namespace inmobiliariaAST.Models
             Inquilino? res = null;
             using (MySqlConnection connection = new MySqlConnection(ConnectionString))
             {
-                var query = "SELECT Id_inquilino, DNI, Nombre, Apellido, Telefono, Email, Direccion FROM inquilino WHERE Id_inquilino = @id";
+                var query = "SELECT ID_inquilino, DNI, Nombre, Apellido, Telefono, Email, Direccion, Estado FROM inquilino WHERE ID_inquilino = @id AND Estado = true";
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@id", id);
@@ -56,7 +57,8 @@ namespace inmobiliariaAST.Models
                             Apellido = reader.GetString(3),
                             Telefono = reader.GetString(4),
                             Email = reader.GetString(5),
-                            Direccion = reader.GetString(6)
+                            Direccion = reader.GetString(6),
+                            Estado = reader.GetBoolean(7)
                         };
                     }
                     connection.Close();
@@ -71,8 +73,8 @@ namespace inmobiliariaAST.Models
             using (MySqlConnection connection = new MySqlConnection(ConnectionString))
             {
                 var query = @"INSERT INTO inquilino 
-                        (DNI, Nombre, Apellido, Telefono, Email, Direccion)
-                        VALUES (@dni, @nombre, @apellido, @telefono, @email, @direccion);
+                        (DNI, Nombre, Apellido, Telefono, Email, Direccion, Estado)
+                        VALUES (@dni, @nombre, @apellido, @telefono, @email, @direccion, @estado);
                         SELECT LAST_INSERT_ID();";
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
@@ -82,6 +84,7 @@ namespace inmobiliariaAST.Models
                     command.Parameters.AddWithValue("@telefono", inquilino.Telefono);
                     command.Parameters.AddWithValue("@email", inquilino.Email);
                     command.Parameters.AddWithValue("@direccion", inquilino.Direccion);
+                    command.Parameters.AddWithValue("@estado", inquilino.Estado);
                     connection.Open();
                     res = Convert.ToInt32(command.ExecuteScalar());
                     connection.Close();
@@ -101,7 +104,8 @@ namespace inmobiliariaAST.Models
                         Apellido = @apellido,
                         Telefono = @telefono, 
                         Email = @email,
-                        Direccion = @direccion
+                        Direccion = @direccion,
+                        Estado = @estado
                         WHERE Id_inquilino = @id";
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
@@ -112,6 +116,7 @@ namespace inmobiliariaAST.Models
                     command.Parameters.AddWithValue("@telefono", inquilino.Telefono);
                     command.Parameters.AddWithValue("@email", inquilino.Email);
                     command.Parameters.AddWithValue("@direccion", inquilino.Direccion);
+                    command.Parameters.AddWithValue("@estado", inquilino.Estado);
                     connection.Open();
                     res = command.ExecuteNonQuery();
                     connection.Close();
@@ -125,7 +130,9 @@ namespace inmobiliariaAST.Models
             int res = -1;
             using (MySqlConnection connection = new MySqlConnection(ConnectionString))
             {
-                var query = "DELETE FROM inquilino WHERE Id_inquilino = @id";
+                var query = @"UPDATE inquilino SET Estado = false WHERE ID_inquilino = @id;
+                            UPDATE contrato SET Estado = false WHERE ID_inquilino = @id;
+                            ";
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@id", id);
@@ -138,3 +145,6 @@ namespace inmobiliariaAST.Models
         }
     }
 }
+
+
+// UPDATE pago SET Estado = false WHERE ID_contrato IN (SELECT ID_contrato FROM contrato WHERE ID_inquilino = @id)";

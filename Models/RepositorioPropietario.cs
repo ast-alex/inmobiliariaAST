@@ -11,7 +11,7 @@ public class RepositorioPropietario
         List<Propietario> propietarios = new List<Propietario>();
         using (MySqlConnection connection = new MySqlConnection(ConnectionString))
         {
-            var query = "SELECT Id_propietario, DNI, Nombre, Apellido, Telefono, Email, Direccion FROM propietario";
+            var query = "SELECT ID_propietario, DNI, Nombre, Apellido, Telefono, Email, Direccion, Estado FROM propietario WHERE Estado = true";
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
                 connection.Open();
@@ -26,7 +26,8 @@ public class RepositorioPropietario
                         Apellido = reader.GetString(3),
                         Telefono = reader.GetString(4),
                         Email = reader.GetString(5),
-                        Direccion = reader.GetString(6)
+                        Direccion = reader.GetString(6),
+                        Estado = reader.GetBoolean(7)
                     });
                 }
                 connection.Close();
@@ -40,7 +41,7 @@ public class RepositorioPropietario
         Propietario? res = null;
         using (MySqlConnection connection = new MySqlConnection(ConnectionString))
         {
-            var query = "SELECT Id_propietario, DNI, Nombre, Apellido, Telefono, Email, Direccion FROM propietario WHERE Id_propietario = @id";
+            var query = "SELECT ID_propietario, DNI, Nombre, Apellido, Telefono, Email, Direccion, Estado FROM propietario WHERE ID_propietario = @id AND Estado = true";
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
                 command.Parameters.AddWithValue("@id", id);
@@ -56,7 +57,8 @@ public class RepositorioPropietario
                         Apellido = reader.GetString(3),
                         Telefono = reader.GetString(4),
                         Email = reader.GetString(5),
-                        Direccion = reader.GetString(6)
+                        Direccion = reader.GetString(6),
+                        Estado = reader.GetBoolean(7)
                     };
                 }
                 connection.Close();
@@ -71,8 +73,8 @@ public class RepositorioPropietario
         using (MySqlConnection connection = new MySqlConnection(ConnectionString))
         {
             var query = @"INSERT INTO propietario 
-                    (DNI ,Nombre, Apellido, Telefono, Email, Direccion)
-                    VALUES (@dni ,@nombre, @apellido, @telefono, @email, @direccion);
+                    (DNI ,Nombre, Apellido, Telefono, Email, Direccion, Estado)
+                    VALUES (@dni ,@nombre, @apellido, @telefono, @email, @direccion, @estado);
                     SELECT LAST_INSERT_ID();";
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
@@ -82,6 +84,7 @@ public class RepositorioPropietario
                 command.Parameters.AddWithValue("@telefono", propietario.Telefono);
                 command.Parameters.AddWithValue("@email", propietario.Email);
                 command.Parameters.AddWithValue("@direccion", propietario.Direccion);
+                command.Parameters.AddWithValue("@estado", true);
                 connection.Open();
                 res = Convert.ToInt32(command.ExecuteScalar());
                 connection.Close();
@@ -101,8 +104,9 @@ public class RepositorioPropietario
                     Apellido = @apellido,
                     Telefono = @telefono, 
                     Email = @email,
-                    Direccion = @direccion
-                    WHERE Id_propietario = @id";
+                    Direccion = @direccion,
+                    Estado = @estado
+                    WHERE ID_propietario = @id";
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
                 command.Parameters.AddWithValue("@id", propietario.ID_propietario);
@@ -112,6 +116,7 @@ public class RepositorioPropietario
                 command.Parameters.AddWithValue("@telefono", propietario.Telefono);
                 command.Parameters.AddWithValue("@email", propietario.Email);
                 command.Parameters.AddWithValue("@direccion", propietario.Direccion);
+                command.Parameters.AddWithValue("@estado", propietario.Estado);
                 connection.Open();
                 res = command.ExecuteNonQuery();
                 connection.Close();
@@ -120,12 +125,16 @@ public class RepositorioPropietario
         return res;
     }
 
+    //logico
     public int Baja(int id)
     {
         int res = -1;
         using (MySqlConnection connection = new MySqlConnection(ConnectionString))
         {
-            var query = "DELETE FROM propietario WHERE Id_propietario = @id";
+            
+            var query = @"UPDATE propietario SET Estado = false WHERE ID_propietario = @id;
+                        UPDATE inmueble SET Estado = false WHERE ID_propietario = @id;
+                        UPDATE contrato SET Estado = false WHERE ID_inmueble IN (SELECT ID_inmueble FROM inmueble WHERE ID_propietario = @id)";
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
                 command.Parameters.AddWithValue("@id", id);

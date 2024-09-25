@@ -9,4 +9,5 @@ public class Inquilino
     public string Telefono { get; set; } = "";
     public string Email { get; set; } = "";
     public string Direccion { get; set; } = "";
+    public bool Estado { get; set; }
 }
