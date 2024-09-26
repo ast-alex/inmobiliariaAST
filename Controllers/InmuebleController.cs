@@ -85,8 +85,6 @@ namespace inmobiliariaAST.Controllers
             return View(inmueble);
         }
 
-
-
         //envio del formulario de edicion
         [HttpPost]
         public IActionResult Edicion(Inmueble inmueble)
@@ -94,16 +92,38 @@ namespace inmobiliariaAST.Controllers
             if (ModelState.IsValid)
             {
                 var inmuebleExists = repo.Get(inmueble.ID_inmueble);
-                if(inmuebleExists != null){
-                    inmueble.Estado = inmueble.Estado;
+                if (inmuebleExists != null)
+                {
+                    // Verificar si el usuario es administrador antes de permitir el cambio de estado
+                    if (User.IsInRole("Administrador"))
+                    {
+                        // Solo los administradores pueden cambiar el estado
+                        inmuebleExists.Estado = inmueble.Estado;
+                    }
+                    else
+                    {
+                        // Mantener el estado actual si no es administrador
+                        inmuebleExists.Estado = inmuebleExists.Estado; // O puedes omitir esta línea
+                    }
+
+                    // Actualizar otros campos del inmueble
+                    inmuebleExists.Direccion = inmueble.Direccion;
+                    inmuebleExists.Uso = inmueble.Uso;
+                    inmuebleExists.Tipo = inmueble.Tipo;
+                    inmuebleExists.Cantidad_Ambientes = inmueble.Cantidad_Ambientes;
+                    inmuebleExists.Latitud = inmueble.Latitud;
+                    inmuebleExists.Longitud = inmueble.Longitud;
+                    inmuebleExists.Precio = inmueble.Precio;
+                    inmuebleExists.Disponibilidad = inmueble.Disponibilidad;
+
+                    // Llamar al repositorio para modificar el inmueble
+                    repo.Modificar(inmuebleExists);
+                    TempData["SuccessMessage"] = "Cambios guardados exitosamente";
+                    return RedirectToAction("Index"); 
                 }
-                
-                // Llamar al repositorio para modificar el inmueble
-                repo.Modificar(inmueble);
-                TempData["SuccessMessage"] = "Cambios guardados exitosamente";
-                return RedirectToAction("Index"); 
             }
 
+            // En caso de error, recargar la lista de propietarios para el dropdown
             var propietarios = repoPropietario.GetPropietarios()
                 .Select(p => new SelectListItem
                 {
@@ -111,9 +131,7 @@ namespace inmobiliariaAST.Controllers
                     Text = $"{p.Nombre} {p.Apellido}"
                 }).ToList();
 
-            // En caso de error, recargar la lista de propietarios para el dropdown
             ViewBag.Propietarios = propietarios;
-
             return View(inmueble);
         }
 

@@ -42,10 +42,21 @@
 
     <div class="form-group">
         <label asp-for="Estado" class="control-label"></label>
-        <select asp-for="Estado" class="form-control">
-            <option value="true" selected="@(Model.Estado == true)">Activo</option>
-            <option value="false" selected="@(Model.Estado == false)">Inactivo</option>
-        </select>
+        @if (User.IsInRole("Administrador")) // Verificar si es administrador
+        {
+            <select asp-for="Estado" class="form-control">
+                <option value="">Seleccione Estado</option>
+                <option value="true">Activo</option>
+                <option value="false">Inactivo</option>
+            </select>
+        }
+        else
+        {
+            <p class="form-control-plaintext">
+                @(Model.Estado ? "Activo" : "Inactivo")
+            </p>
+            <input type="hidden" asp-for="Estado" />
+        }
         <span asp-validation-for="Estado" class="text-danger"></span>
     </div>
 

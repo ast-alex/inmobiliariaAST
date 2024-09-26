@@ -177,6 +177,7 @@ public class RepositorioInmueble{
                         Latitud = @latitud,
                         Longitud = @longitud,
                         Precio = @precio,
+                        Estado = @estado,
                         Disponibilidad = @disponibilidad,
                         ID_propietario = @id_propietario
                         WHERE ID_inmueble = @id ;";
@@ -190,8 +191,8 @@ public class RepositorioInmueble{
                 command.Parameters.AddWithValue("@latitud", inmueble.Latitud.HasValue ? (object)inmueble.Latitud.Value : DBNull.Value);
                 command.Parameters.AddWithValue("@longitud", inmueble.Longitud.HasValue ? (object)inmueble.Longitud.Value : DBNull.Value);
                 command.Parameters.AddWithValue("@precio", inmueble.Precio);
+                command.Parameters.AddWithValue("@estado", inmueble.Estado);
                 command.Parameters.AddWithValue("@disponibilidad", inmueble.Disponibilidad);
-                // command.Parameters.AddWithValue("@estado", inmueble.Estado.ToString());
                 command.Parameters.AddWithValue("@id_propietario", inmueble.ID_propietario);
                 
                 connection.Open();

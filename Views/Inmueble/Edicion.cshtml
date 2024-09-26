@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Editar Inmueble";
+    
 }
 
 <div class="container mt-4">
@@ -69,7 +70,7 @@
             <input asp-for="Precio" class="form-control" type="number" step="0.01" placeholder="Ingrese precio" />
             <span asp-validation-for="Precio" class="text-danger"></span>
         </div>
-
+@* 
         <div class="form-group">
             <label asp-for="Estado" class="control-label"></label>
             <select asp-for="Estado" class="form-control">
@@ -78,7 +79,30 @@
                 <option value="false">Inactivo</option>
             </select>
             <span asp-validation-for="Estado" class="text-danger"></span>
+        </div> *@
+
+        
+
+        <div class="form-group">
+            <label asp-for="Estado" class="control-label"></label>
+            @if (User.IsInRole("Administrador")) // Verificar si es administrador
+            {
+                <select asp-for="Estado" class="form-control">
+                    <option value="">Seleccione Estado</option>
+                    <option value="true">Activo</option>
+                    <option value="false">Inactivo</option>
+                </select>
+            }
+            else
+            {
+                <p class="form-control-plaintext">
+                    @(Model.Estado ? "Activo" : "Inactivo")
+                </p>
+                <input type="hidden" asp-for="Estado" />
+            }
+            <span asp-validation-for="Estado" class="text-danger"></span>
         </div>
+
 
         <div class="form-group">
             <label asp-for="Disponibilidad" class="control-label"></label>
@@ -88,8 +112,6 @@
             </select>
             <span asp-validation-for="Disponibilidad" class="text-danger"></span>
         </div>
-
-
 
         <input type="hidden" asp-for="ID_inmueble" />
 
