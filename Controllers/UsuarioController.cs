@@ -22,7 +22,7 @@ public class UsuarioController : Controller{
     [Authorize]
     public IActionResult Index()
     {
-        // Obtener el usuario autenticado
+        // get usuario autenticado
         var usuarioAutenticado = User.Identity?.Name;
         if (string.IsNullOrEmpty(usuarioAutenticado))
         {
@@ -30,7 +30,7 @@ public class UsuarioController : Controller{
             return RedirectToAction("Login", "Auth");
         }
 
-        // Si es Administrador, mostramos todos los usuarios
+        // Si es Administrador
         if (User.IsInRole("Administrador"))
         {
             var usuarios = repo.ObtenerTodosUsuariosIncluidosInactivos();
@@ -38,7 +38,7 @@ public class UsuarioController : Controller{
         }
         else
         {
-            // Si no es administrador, mostramos solo su perfil
+            // Si es empleado
             var usuario = repo.GetByEmail(usuarioAutenticado);
             return View(new List<Usuario?> { usuario });
         }
