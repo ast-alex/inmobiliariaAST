@@ -20,6 +20,7 @@ public class Inmueble{
     public decimal Precio { get; set; }
     [Required]
     public bool Estado { get; set; } = true;
+    public bool Disponibilidad { get; set; } 
     [Required]
     public int ID_propietario { get; set; }
     public Propietario? Propietario { get; set; }

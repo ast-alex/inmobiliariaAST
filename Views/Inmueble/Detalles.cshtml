@@ -47,6 +47,10 @@
                         <p class="form-control-plaintext">@Model.Estado</p>
                     </div>
                     <div class="form-group">
+                        <label>Disponibilidad:</label>
+                        <p class="form-control-plaintext">@(@Model.Disponibilidad ? "Disponible" : "No Disponible")</p>
+                    </div>
+                    <div class="form-group">
                         <label>Propietario:</label>
                         <p class="form-control-plaintext">@Model.Propietario?.Nombre @Model.Propietario?.Apellido</p>
                     </div>

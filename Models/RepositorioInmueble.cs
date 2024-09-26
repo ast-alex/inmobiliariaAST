@@ -21,6 +21,7 @@ public class RepositorioInmueble{
                     i.Longitud AS Longitud,
                     i.Precio AS Price,
                     i.Estado ,
+                    i.Disponibilidad AS Disponibilidad,
                     p.ID_propietario,
                     p.Nombre AS Propietario_Nombre,
                     p.Apellido AS Propietario_Apellido
@@ -48,12 +49,13 @@ public class RepositorioInmueble{
                         Longitud = reader.IsDBNull(6) ? (decimal?)null : reader.GetDecimal(6),
                         Precio = reader.GetDecimal(7),
                         Estado = reader.GetBoolean(8),
-                        ID_propietario = reader.GetInt32(9),
-                        Propietario = new Propietario // Aquí añadimos los datos del propietario
+                        Disponibilidad = reader.GetBoolean(9),
+                        ID_propietario = reader.GetInt32(10),
+                        Propietario = new Propietario //datos del propietario
                         {
-                            ID_propietario = reader.GetInt32(9),
-                            Nombre = reader.GetString(10),
-                            Apellido = reader.GetString(11)
+                            ID_propietario = reader.GetInt32(10),
+                            Nombre = reader.GetString(11),
+                            Apellido = reader.GetString(12)
                         }
                     };
 
@@ -83,6 +85,7 @@ public class RepositorioInmueble{
                     i.Longitud,
                     i.Precio,
                     i.Estado,
+                    i.Disponibilidad,
                     p.ID_propietario,
                     p.Nombre AS Propietario_Nombre,
                     p.Apellido AS Propietario_Apellido
@@ -111,12 +114,13 @@ public class RepositorioInmueble{
                         Longitud = reader.IsDBNull(6) ? (decimal?)null : reader.GetDecimal(6),
                         Precio = reader.GetDecimal(7),
                         Estado = reader.GetBoolean(8),
-                        ID_propietario = reader.GetInt32(9),
+                        Disponibilidad = reader.GetBoolean(9),
+                        ID_propietario = reader.GetInt32(10),
                         Propietario = new Propietario 
                         {
-                            ID_propietario = reader.GetInt32(9),
-                            Nombre = reader.GetString(10),
-                            Apellido = reader.GetString(11)
+                            ID_propietario = reader.GetInt32(10),
+                            Nombre = reader.GetString(11),
+                            Apellido = reader.GetString(12)
                         }
                     };
                 }
@@ -134,8 +138,8 @@ public class RepositorioInmueble{
         using (MySqlConnection connection = new MySqlConnection(ConnectionString))
         {
             var query = @"INSERT INTO inmueble 
-                        (Direccion, Uso, Tipo, Cantidad_Ambientes, Latitud, Longitud, Precio, Estado, ID_propietario)
-                        VALUES (@direccion, @uso, @tipo, @cantidad_ambientes, @latitud, @longitud, @precio, @estado, @id_propietario);
+                        (Direccion, Uso, Tipo, Cantidad_Ambientes, Latitud, Longitud, Precio, Estado, Disponibilidad, ID_propietario)
+                        VALUES (@direccion, @uso, @tipo, @cantidad_ambientes, @latitud, @longitud, @precio, @estado, @disponibilidad, @id_propietario);
                         SELECT LAST_INSERT_ID();";
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
@@ -147,6 +151,7 @@ public class RepositorioInmueble{
                 command.Parameters.AddWithValue("@longitud", inmueble.Longitud.HasValue ? (object)inmueble.Longitud.Value : DBNull.Value);
                 command.Parameters.AddWithValue("@precio", inmueble.Precio);
                 command.Parameters.AddWithValue("@estado", true);
+                command.Parameters.AddWithValue("@disponibilidad", inmueble.Disponibilidad);
                 command.Parameters.AddWithValue("@id_propietario", inmueble.ID_propietario);
                 
                 connection.Open();
@@ -172,6 +177,7 @@ public class RepositorioInmueble{
                         Latitud = @latitud,
                         Longitud = @longitud,
                         Precio = @precio,
+                        Disponibilidad = @disponibilidad,
                         ID_propietario = @id_propietario
                         WHERE ID_inmueble = @id ;";
             using (MySqlCommand command = new MySqlCommand(query, connection))
@@ -184,6 +190,7 @@ public class RepositorioInmueble{
                 command.Parameters.AddWithValue("@latitud", inmueble.Latitud.HasValue ? (object)inmueble.Latitud.Value : DBNull.Value);
                 command.Parameters.AddWithValue("@longitud", inmueble.Longitud.HasValue ? (object)inmueble.Longitud.Value : DBNull.Value);
                 command.Parameters.AddWithValue("@precio", inmueble.Precio);
+                command.Parameters.AddWithValue("@disponibilidad", inmueble.Disponibilidad);
                 // command.Parameters.AddWithValue("@estado", inmueble.Estado.ToString());
                 command.Parameters.AddWithValue("@id_propietario", inmueble.ID_propietario);
                 

@@ -19,6 +19,7 @@ public class UsuarioController : Controller{
 
 
     //get usuario
+    [Authorize(Roles = "Administrador")]
     public IActionResult Index()
     {
         var usuarios = repo.ObtenerTodosUsuariosIncluidosInactivos();
@@ -74,6 +75,7 @@ public class UsuarioController : Controller{
 
 
     //get usuario detalles
+    // [Authorize(Roles = "Administrador")]
     public IActionResult Detalles(int id)
     {
       
@@ -157,7 +159,10 @@ public class UsuarioController : Controller{
         }
         return View(usuario);
     }
+    
+    
     //GETedicion
+    [HttpGet]
     public IActionResult Edicion(int id)
     {
         var usuario = repo.GetID(id);
@@ -174,11 +179,18 @@ public class UsuarioController : Controller{
             usuarioLogeado = repo.GetByEmail(email);
         }
 
+        // Permitir a los empleados editar solo su propio perfil
+        if (usuarioLogeado != null && usuarioLogeado.Rol == (int)Roles.Empleado && usuarioLogeado.ID_usuario != usuario.ID_usuario)
+        {
+            return RedirectToAction("AccessDenied", "Auth");
+        }
+
         ViewBag.EsAdministrador = usuarioLogeado?.Rol == (int)Roles.Administrador;
         ViewBag.esPropioPerfil = usuarioLogeado?.Email == usuario.Email;
 
         return View(usuario);
     }
+
     
     //post
     [HttpPost]
@@ -190,7 +202,23 @@ public class UsuarioController : Controller{
             return NotFound();
         }
 
-        if(eliminarAvatar){
+        // Verifica si el usuario logueado es un empleado y está intentando editar su perfil
+        var email = User.Identity?.Name;
+        Usuario? usuarioLogeado = null;
+
+        if (!string.IsNullOrEmpty(email))
+        {
+            usuarioLogeado = repo.GetByEmail(email);
+        }
+
+        // Permitir a los empleados editar solo su propio perfil
+        if (usuarioLogeado != null && usuarioLogeado.Rol == (int)Roles.Empleado && usuarioLogeado.ID_usuario != usuario.ID_usuario)
+        {
+            return RedirectToAction("AccessDenied", "Auth");
+        }
+
+        if (eliminarAvatar)
+        {
             repo.EliminarAvatar(usuario.ID_usuario);
         }
 
@@ -233,37 +261,27 @@ public class UsuarioController : Controller{
             usuario.Password = usuarioActual.Password;
 
             // Validación del estado
-            var email = User.Identity?.Name;
-            Usuario? usuarioLogeado = null;
-
-            if (!string.IsNullOrEmpty(email))
+            if (usuarioLogeado != null && usuarioLogeado.Rol != (int)Roles.Administrador)
             {
-                usuarioLogeado = repo.GetByEmail(email);
-            }
-
-            if (usuarioLogeado != null)
-            {
-                // No permitir al usuario cambiar su propio rol
-                if (usuarioLogeado.Email == usuario.Email)
-                {
-                    usuario.Rol = usuarioActual.Rol; // Mantener el rol actual si es su propio perfil
-                }
-
-                // Mantener el estado actual si no es administrador
-                if (usuarioLogeado.Rol != (int)Roles.Administrador)
-                {
-                    usuario.Estado = usuarioActual.Estado;
-                }
+                usuario.Estado = usuarioActual.Estado; // Mantener el estado actual si no es administrador
             }
 
             // Actualizar los demás campos
             repo.ActualizarUsuario(usuario);
             TempData["SuccessMessage"] = "Cambios guardados exitosamente";
-            return RedirectToAction(nameof(Index));
+            
+            //redirigir segun rol: 
+            if(usuarioLogeado.Rol == (int)Roles.Administrador){
+                return RedirectToAction(nameof(Index));
+            }else{
+
+                return RedirectToAction("Detalles", new { id = usuarioLogeado.ID_usuario });
+            }
         }
 
         return View(usuario);
     }
+
 
     //eliminar
     [Authorize(Roles = "Administrador")]

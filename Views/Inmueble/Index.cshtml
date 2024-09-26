@@ -19,6 +19,7 @@
             <th>Ambientes</th>
             <th>Precio</th>
             <th>Estado</th>
+            <th>Disponibilidad</th>
             <th>Propietario</th>
             <th>Acciones</th>
         </tr>
@@ -42,6 +43,7 @@
                     <span class="badge bg-danger">Inactivo</span>
                 }
                 </td>
+                <td>@(inmueble.Disponibilidad ? "Disponible" : "No Disponible")</td>
                 <td>@inmueble.Propietario?.Nombre @inmueble.Propietario?.Apellido</td>
                 <td>
                     <a href="@Url.Action("Detalles", new { id = inmueble.ID_inmueble })" class="btn btn-info btn-sm">Detalles</a>
