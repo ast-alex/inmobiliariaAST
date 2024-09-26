@@ -1,7 +1,7 @@
 ### FALTA.... 
 
 
-### Administrador: admin@gmail.com - admin123
+### Administrador: admin@gmail.com - admin
 ### Empleado: empleado@gmail.com - root
 
 
