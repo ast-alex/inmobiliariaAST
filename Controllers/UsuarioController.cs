@@ -19,12 +19,31 @@ public class UsuarioController : Controller{
 
 
     //get usuario
-    [Authorize(Roles = "Administrador")]
+    [Authorize]
     public IActionResult Index()
     {
-        var usuarios = repo.ObtenerTodosUsuariosIncluidosInactivos();
-        return View(usuarios);
+        // Obtener el usuario autenticado
+        var usuarioAutenticado = User.Identity?.Name;
+        if (string.IsNullOrEmpty(usuarioAutenticado))
+        {
+            //en caso de que el usuario autenticado sea nulo redireccionado al login 
+            return RedirectToAction("Login", "Auth");
+        }
+
+        // Si es Administrador, mostramos todos los usuarios
+        if (User.IsInRole("Administrador"))
+        {
+            var usuarios = repo.ObtenerTodosUsuariosIncluidosInactivos();
+            return View(usuarios);
+        }
+        else
+        {
+            // Si no es administrador, mostramos solo su perfil
+            var usuario = repo.GetByEmail(usuarioAutenticado);
+            return View(new List<Usuario?> { usuario });
+        }
     }
+
 
     //password
     [HttpGet]
