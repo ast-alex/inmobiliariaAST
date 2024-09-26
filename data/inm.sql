@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 25-09-2024 a las 17:02:29
+-- Tiempo de generación: 26-09-2024 a las 18:17:57
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -44,13 +44,14 @@ CREATE TABLE `contrato` (
 --
 
 INSERT INTO `contrato` (`ID_contrato`, `ID_inmueble`, `ID_inquilino`, `Fecha_Inicio`, `Fecha_Fin`, `Monto_Mensual`, `Estado`, `Fecha_Terminacion_Anticipada`, `Multa`) VALUES
-(1, 1, 1, '2024-09-12', '2024-12-13', 2300.00, 1, NULL, NULL),
+(1, 3, 1, '2024-09-12', '2024-12-13', 220000.00, 1, NULL, NULL),
 (2, 2, 1, '2024-09-18', '2024-11-22', 2300.00, 0, NULL, NULL),
 (3, 2, 2, '2024-09-26', '2024-12-18', 2500.00, 0, NULL, NULL),
 (4, 3, 2, '2024-09-28', '2024-10-29', 2800.00, 0, NULL, NULL),
 (5, 2, 1, '2024-09-26', '2024-11-16', 2300.00, 0, NULL, NULL),
 (6, 6, 1, '2024-09-26', '2024-10-17', 4300.00, 0, NULL, NULL),
-(7, 13, 3, '2024-09-26', '2024-10-26', 2300.00, 0, NULL, NULL);
+(7, 13, 3, '2024-09-26', '2024-10-26', 2300.00, 0, NULL, NULL),
+(8, 14, 3, '2024-09-25', '2024-11-25', 189000.00, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -68,21 +69,25 @@ CREATE TABLE `inmueble` (
   `Latitud` decimal(9,6) DEFAULT NULL,
   `Longitud` decimal(9,6) DEFAULT NULL,
   `Precio` decimal(10,2) NOT NULL,
-  `Estado` tinyint(1) DEFAULT NULL
+  `Estado` tinyint(1) DEFAULT NULL,
+  `Disponibilidad` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `inmueble`
 --
 
-INSERT INTO `inmueble` (`ID_inmueble`, `ID_propietario`, `Direccion`, `Uso`, `Tipo`, `Cantidad_Ambientes`, `Latitud`, `Longitud`, `Precio`, `Estado`) VALUES
-(1, 1, 'Calle del Ejemplo 456', 'Comercial', 'Casa', 4, 40.123456, -3.654323, 1200.00, 0),
-(2, 1, 'Av.Juan G. Funes 785', 'Residencial', 'Departamento', 4, -33.311277, -66.333202, 1102.00, 0),
-(3, 1, 'Av. Santa Fe 3223, Mendoza', 'Residencial', 'Casa', 5, -34.603722, -58.385678, 3000.00, 1),
-(5, 2, 'La Obra 1051', 'Comercial', 'Deposito', 5, -34.603722, -68.827200, 59000.00, 0),
-(6, 3, 'Av LaFinur 132', 'Residencial', 'Departamento', 2, -34.603580, -58.385678, 59000.99, 0),
-(12, 3, 'Av. Santa Fe 3223, Mendoza', 'Residencial', 'Local', 1, -34.603722, -58.385678, 59800.00, 0),
-(13, 3, 'Inmueble del contrato Desactivar', 'Residencial', 'Casa', 1, -34.603722, -58.385678, 59800.00, 0);
+INSERT INTO `inmueble` (`ID_inmueble`, `ID_propietario`, `Direccion`, `Uso`, `Tipo`, `Cantidad_Ambientes`, `Latitud`, `Longitud`, `Precio`, `Estado`, `Disponibilidad`) VALUES
+(1, 1, 'Calle del Ejemplo 456', 'Comercial', 'Casa', 4, 40.123456, -3.654323, 1200.00, 0, 1),
+(2, 1, 'Av.Juan G. Funes 785', 'Residencial', 'Departamento', 4, -33.311277, -66.333202, 1102.00, 0, 1),
+(3, 1, 'Av. Santa Fe 3223, Mendoza', 'Residencial', 'Casa', 5, -34.603722, -58.385678, 187000.00, 1, 1),
+(5, 2, 'La Obra 1051', 'Comercial', 'Deposito', 5, -34.603722, -68.827200, 59000.00, 0, 1),
+(6, 3, 'Av LaFinur 132', 'Residencial', 'Departamento', 2, -34.603580, -58.385678, 59000.99, 0, 1),
+(12, 3, 'Av. Santa Fe 3223, Mendoza', 'Residencial', 'Local', 1, -34.603722, -58.385678, 59800.00, 0, 1),
+(13, 3, 'Inmueble del contrato Desactivar', 'Residencial', 'Departamento', 1, -34.603722, -58.385678, 59800.00, 0, 0),
+(14, 4, 'Av LaFinur 423', 'Comercial', 'Local', 6, -34.603722, -58.385678, 28000.00, 1, 1),
+(15, 1, 'Belgrano 754', 'Residencial', 'Departamento', 1, -34.603722, -58.385678, 598000.00, 0, 1),
+(16, 4, 'Belgrano 755', 'Comercial', 'Casa', 3, -34.603722, -58.385678, 59000.99, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -158,9 +163,10 @@ CREATE TABLE `propietario` (
 --
 
 INSERT INTO `propietario` (`ID_propietario`, `DNI`, `Nombre`, `Apellido`, `Telefono`, `Email`, `Direccion`, `Estado`) VALUES
-(1, '12345678A', 'Juan', 'Pérez', '555-1234', 'juan.perez@example.com', 'Calle Falsa 12', 1),
+(1, '12345678A', 'Juan', 'Pérez', '555-12345', 'juan.perez@example.com', 'Calle Falsa 12', 1),
 (2, '32323232', 'Pepito', 'Perez', '2665987002', 'a@gmail.com', 'Av LaFinur 132', 0),
-(3, '32323232', 'Naruto', 'Titi', '2664033442', 'b@bb.com', 'Belgrano 755', 0);
+(3, '32323232', 'Naruto', 'Titi', '2664033442', 'b@bb.com', 'Belgrano 755', 1),
+(4, '18122022', 'Leo', 'Messi', '2664101930', 'leo@gmail.com', 'Florida Miami', 1);
 
 -- --------------------------------------------------------
 
@@ -185,11 +191,12 @@ CREATE TABLE `usuario` (
 
 INSERT INTO `usuario` (`ID_usuario`, `Email`, `Password`, `Rol`, `Nombre`, `Apellido`, `Estado`, `Avatar`) VALUES
 (1, 'a@gmail.com', '+/RXd2ZQPXGwm9WJOAj9KXJgnduKyb5lrII8nqTub1zfg0+t', 2, 'Pepe', 'Perez', 1, '/uploads/avatars/default.jpg'),
-(2, 'asdasd@gmail.com', 'gDt0x2Z1btyIFc21Fex2Su/EzKW4wj+3jE7pC2L03bwaBGqi', 1, 'Pepito', 'Segundo', 1, '/uploads/avatars/902258c0-d5da-4d29-9df6-f7a6d98c0eb1_usuario.jpg'),
-(3, 'b@b.com', 'nEAWvfkb+q7YV+KV3ZvgRPbWJlz0LTecWodYiKOU9sccVzNa', 1, 'JuanEdit', 'Segu', 1, NULL),
-(4, 'probando@gmail.com', 'TEgrwZI5Jv0KZGPz8NUXt76EL0unWR/Zl4zAf9Y+4ev+kuLC', 1, 'Leoo', 'Messi', 1, '/uploads/avatars/38781f46-a80a-4a4e-b7b9-a2cb29706a24_usuario.jpg'),
-(5, 'empleado2@gmail.com', 'cC+JOVFLZHKbcD1amzYiNhQln86b3Ffs+HFTydKT93zMr6Uv', 2, 'Empleado', 'Esel Roll', 1, '/uploads/avatars/b140ada9-a600-410b-8364-f0683382f84f_avatar1.jpg'),
-(6, 'correo@gmail.com', '+ev+BtcbFhaqpQbfMqUDTrX41NGV7Gf+Ngw8DmYDpk9p2rlR', 2, 'Alex', 'Astudillo', 1, '/uploads/avatars/default.jpg');
+(2, 'asdasd@gmail.com', 'gDt0x2Z1btyIFc21Fex2Su/EzKW4wj+3jE7pC2L03bwaBGqi', 1, 'Pepito', 'Segundo', 1, '/uploads/avatars/default.jpg'),
+(3, 'b@b.com', 'nEAWvfkb+q7YV+KV3ZvgRPbWJlz0LTecWodYiKOU9sccVzNa', 1, 'JuanEdit', 'Segu', 0, '/uploads/avatars/default.jpg'),
+(4, 'probando@gmail.com', 'TEgrwZI5Jv0KZGPz8NUXt76EL0unWR/Zl4zAf9Y+4ev+kuLC', 1, 'Leoo', 'Messi', 0, '/uploads/avatars/default.jpg'),
+(5, 'empleado2@gmail.com', 'cC+JOVFLZHKbcD1amzYiNhQln86b3Ffs+HFTydKT93zMr6Uv', 2, 'Empleado', 'Esel Rol', 0, '/uploads/avatars/default.jpg'),
+(6, 'empleado@gmail.com', 'GktS2EJj0XybX7uIaXbyXM8ayFIWvFuPSw8a+5WujCoK61gV', 2, 'Employee', 'EmpleadoEdit8', 1, '/uploads/avatars/default.jpg'),
+(7, 'admin@gmail.com', '157HKRrs0pORrrCEwTJexS8x2Xy9rRGR4ObGn9TW07IweMfB', 1, 'Admin', 'Administrador', 1, '/uploads/avatars/80c8b4e9-cc7e-4cdb-a58a-f48cb7c6e5dc_avatar1.jpg');
 
 --
 -- Índices para tablas volcadas
@@ -244,13 +251,13 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `contrato`
 --
 ALTER TABLE `contrato`
-  MODIFY `ID_contrato` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `ID_contrato` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `inmueble`
 --
 ALTER TABLE `inmueble`
-  MODIFY `ID_inmueble` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `ID_inmueble` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `inquilino`
@@ -268,13 +275,13 @@ ALTER TABLE `pago`
 -- AUTO_INCREMENT de la tabla `propietario`
 --
 ALTER TABLE `propietario`
-  MODIFY `ID_propietario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `ID_propietario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `ID_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `ID_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Restricciones para tablas volcadas

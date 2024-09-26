@@ -63,13 +63,15 @@ public class UsuarioController : Controller{
             // Cambiar contraseña
             if (!string.IsNullOrEmpty(model.NuevaPassword))
             {
-                usuarioLogeado.Password = _authService.HashPassword(model.NuevaPassword);
+                var nuevoHash = _authService.HashPassword(model.NuevaPassword);
+                usuarioLogeado.Password = nuevoHash;
+
+                // Actualizar el usuario en la base de datos
                 repo.ActualizarUsuario(usuarioLogeado);
             }
-
-            return RedirectToAction("Detalles", "Usuario", new { id = usuarioLogeado.ID_usuario });
+            // return RedirectToAction("Detalles", "Usuario", new { id = usuarioLogeado.ID_usuario });
+            return RedirectToAction("Index", "Home");
         }
-
         return View(model);
     }
 
@@ -271,11 +273,11 @@ public class UsuarioController : Controller{
             TempData["SuccessMessage"] = "Cambios guardados exitosamente";
             
             //redirigir segun rol: 
-            if(usuarioLogeado.Rol == (int)Roles.Administrador){
+            if(usuarioLogeado?.Rol == (int)Roles.Administrador){
                 return RedirectToAction(nameof(Index));
             }else{
 
-                return RedirectToAction("Detalles", new { id = usuarioLogeado.ID_usuario });
+                return RedirectToAction("Detalles", new { id = usuarioLogeado?.ID_usuario });
             }
         }
 

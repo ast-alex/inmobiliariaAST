@@ -109,7 +109,8 @@ namespace inmobiliariaAST.Models
                     Nombre = @Nombre,
                     Apellido = @Apellido,
                     Estado = @Estado,
-                    Avatar = @Avatar
+                    Avatar = @Avatar,
+                    Password = @Password
                 WHERE ID_usuario = @ID_usuario";
 
                 using (var command = new MySqlCommand(query, connection))
@@ -120,6 +121,7 @@ namespace inmobiliariaAST.Models
                 command.Parameters.AddWithValue("@Apellido", usuario.Apellido);
                 command.Parameters.AddWithValue("@Estado", usuario.Estado);
                 command.Parameters.AddWithValue("@Avatar", usuario.Avatar ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@Password", usuario.Password);
 
                 connection.Open();
                 command.ExecuteNonQuery();
