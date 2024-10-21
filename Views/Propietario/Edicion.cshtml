@@ -50,6 +50,11 @@
                             <option value="true">Activo</option>
                             <option value="false">Inactivo</option>
                         </select>
+                        <div class="form-group">
+                            <label asp-for="Password" class="control-label"></label>
+                            <input asp-for="Password" type="password" class="form-control" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
                     }
                     else
                     {

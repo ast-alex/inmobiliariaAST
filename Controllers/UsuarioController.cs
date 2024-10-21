@@ -173,7 +173,7 @@ public class UsuarioController : Controller{
             {
                 usuario.Password = _authService.HashPassword(usuario.Password);
             }
-            //usuario.Password = _authService.HashPassword(usuario.Password);
+            
             var id = repo.Alta(usuario);
             TempData["SuccessMessage"] = "Usuario creado exitosamente";
             return RedirectToAction(nameof(Index));

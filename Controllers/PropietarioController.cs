@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using inmobiliariaAST.Services;
 
 
 namespace inmobiliariaAST.Models;
@@ -8,11 +9,13 @@ namespace inmobiliariaAST.Models;
 public class PropietarioController : Controller
 {
     private readonly ILogger<PropietarioController> _logger;
+    private readonly AuthenticationService _authService;
 
     private RepositorioPropietario repo;
-    public PropietarioController(ILogger<PropietarioController> logger)
+    public PropietarioController(ILogger<PropietarioController> logger, AuthenticationService authService)
     {
         _logger = logger;
+        _authService = authService;
 
         repo = new RepositorioPropietario();
     }
@@ -41,6 +44,10 @@ public class PropietarioController : Controller
         id = propietario.ID_propietario;
         if(id == 0)
         {
+            if (!string.IsNullOrEmpty(propietario.Password))
+            {
+                propietario.Password = _authService.HashPassword(propietario.Password);
+            }
             repo.Alta(propietario);
         }
         else

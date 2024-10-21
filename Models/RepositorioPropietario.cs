@@ -2,7 +2,7 @@ using MySql.Data.MySqlClient;
 
 namespace inmobiliariaAST.Models;
 
-public class RepositorioPropietario
+public class RepositorioPropietario : IRepositorioPropietario
 {
     private string ConnectionString = "Server=localhost;User=root;Password=;Database=inm;SslMode=none";
 
@@ -73,8 +73,8 @@ public class RepositorioPropietario
         using (MySqlConnection connection = new MySqlConnection(ConnectionString))
         {
             var query = @"INSERT INTO propietario 
-                    (DNI ,Nombre, Apellido, Telefono, Email, Direccion, Estado)
-                    VALUES (@dni ,@nombre, @apellido, @telefono, @email, @direccion, @estado);
+                    (DNI ,Nombre, Apellido, Telefono, Email, Direccion, Estado, Password)
+                    VALUES (@dni ,@nombre, @apellido, @telefono, @email, @direccion, @estado, @password);
                     SELECT LAST_INSERT_ID();";
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
@@ -85,6 +85,7 @@ public class RepositorioPropietario
                 command.Parameters.AddWithValue("@email", propietario.Email);
                 command.Parameters.AddWithValue("@direccion", propietario.Direccion);
                 command.Parameters.AddWithValue("@estado", true);
+                command.Parameters.AddWithValue("@password", propietario.Password);
                 connection.Open();
                 res = Convert.ToInt32(command.ExecuteScalar());
                 connection.Close();
@@ -144,5 +145,39 @@ public class RepositorioPropietario
             }
         }
         return res;
+    }
+     public Propietario? GetByEmail(string email)
+    {
+        Propietario? propietario = null;
+        using (MySqlConnection connection = new MySqlConnection(ConnectionString))
+        {
+             if (string.IsNullOrEmpty(email))
+            {
+                throw new ArgumentException("El email no puede ser nulo o vacío", nameof(email));
+            }
+            var query = "SELECT ID_propietario, DNI, Nombre, Apellido, Telefono, Email, Direccion, Estado FROM propietario WHERE Email = @Email AND Estado = true";
+            using (MySqlCommand command = new MySqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@Email", email);
+                connection.Open();
+                var reader = command.ExecuteReader();
+                if (reader.Read())
+                {
+                    propietario = new Propietario
+                    {
+                        ID_propietario = reader.GetInt32(0),
+                        DNI = reader.GetString(1),
+                        Nombre = reader.GetString(2),
+                        Apellido = reader.GetString(3),
+                        Telefono = reader.GetString(4),
+                        Email = reader.GetString(5),
+                        Direccion = reader.GetString(6),
+                        Estado = reader.GetBoolean(7)
+                    };
+                }
+                connection.Close();
+            }
+        }
+        return propietario;
     }
 }
