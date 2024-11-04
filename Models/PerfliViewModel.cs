@@ -8,7 +8,8 @@ namespace inmobiliariaAST.Models{
         public string? Email { get; set; }
         public string? Telefono { get; set; }
         public string? Direccion { get; set; }
-         [NotMapped]
+        
+        public string? Avatar { get; set; }
         public IFormFile? AvatarFile { get; set; }
     }
 }

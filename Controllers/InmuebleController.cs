@@ -23,14 +23,14 @@ namespace inmobiliariaAST.Controllers
         // Listar todos los inmuebles
         public IActionResult Index()
         {
-            var lista = repo.GetInmuebles();
+            var lista = repo.Get();
             return View(lista);
         }
 
         // Mostrar el formulario de creación
         public IActionResult Crear()
         {
-            var propietarios = repoPropietario.GetPropietarios()
+            var propietarios = repoPropietario.Get()
                 .Select(p => new SelectListItem{
                     Value = p.ID_propietario.ToString(),
                     Text = $"{p.Nombre} {p.Apellido}"
@@ -55,7 +55,7 @@ namespace inmobiliariaAST.Controllers
 
             // Volver a mostrar el formulario con errores si el modelo no es válido
             ViewBag.Propietario = new SelectList(
-                repoPropietario.GetPropietarios(),
+                repoPropietario.Get(),
                 "ID_propietario",
                 "Nombre"
             );
@@ -67,14 +67,14 @@ namespace inmobiliariaAST.Controllers
         public IActionResult Edicion(int id)
         {
             // Obtener el inmueble con su propietario
-            var inmueble = repo.Get(id);
+            var inmueble = repo.GetId(id);
             
             if (inmueble == null)
             {
                 return NotFound();
             }
 
-            var propietarios = repoPropietario.GetPropietarios()
+            var propietarios = repoPropietario.Get()
                 .Select(p => new SelectListItem{
                     Value = p.ID_propietario.ToString(),
                     Text = $"{p.Nombre} {p.Apellido}"
@@ -91,7 +91,7 @@ namespace inmobiliariaAST.Controllers
         {
             if (ModelState.IsValid)
             {
-                var inmuebleExists = repo.Get(inmueble.ID_inmueble);
+                var inmuebleExists = repo.GetId(inmueble.ID_inmueble);
                 if (inmuebleExists != null)
                 {
                     // Verificar si el usuario es administrador antes de permitir el cambio de estado
@@ -124,7 +124,7 @@ namespace inmobiliariaAST.Controllers
             }
 
             // En caso de error, recargar la lista de propietarios para el dropdown
-            var propietarios = repoPropietario.GetPropietarios()
+            var propietarios = repoPropietario.Get()
                 .Select(p => new SelectListItem
                 {
                     Value = p.ID_propietario.ToString(),
@@ -138,7 +138,7 @@ namespace inmobiliariaAST.Controllers
         //detalles inmueble
         public IActionResult Detalles(int id){
 
-            var inmueble = repo.Get(id);
+            var inmueble = repo.GetId(id);
             if(inmueble == null){
                 return NotFound();
             }

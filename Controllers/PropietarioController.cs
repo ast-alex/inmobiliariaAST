@@ -22,7 +22,7 @@ public class PropietarioController : Controller
 
     public IActionResult Index()
     {
-        var lista = repo.GetPropietarios();
+        var lista = repo.Get();
         return View(lista);
     }
      
@@ -32,7 +32,7 @@ public class PropietarioController : Controller
         return View();
         else
         {
-            var propietario = repo.Get(id);
+            var propietario = repo.GetId(id);
             TempData["SuccessMessage"] = "Cambios guardados exitosamente";
             return View(propietario);
         }
@@ -60,7 +60,7 @@ public class PropietarioController : Controller
     //detalle propietario
     public IActionResult Detalles(int id){
         
-        var propietario = repo.Get(id);
+        var propietario = repo.GetId(id);
         if(propietario == null){
             return NotFound();
         }
@@ -70,7 +70,7 @@ public class PropietarioController : Controller
     [Authorize(Roles = "Administrador")]    
     public IActionResult Eliminar(int id)
     {
-        var propietario = repo.Get(id);
+        var propietario = repo.GetId(id);
         if(propietario == null){
             return NotFound();
         }

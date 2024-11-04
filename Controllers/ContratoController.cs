@@ -32,7 +32,7 @@ namespace inmobiliariaAST.Controllers{
         public IActionResult Crear()
         {
             ViewBag.Inmuebles = new SelectList(
-                repoInmueble.GetInmuebles(), //metodo para obtener la lista de inmuebles
+                repoInmueble.Get(), //metodo para obtener la lista de inmuebles
                 "ID_inmueble", 
                 "Direccion"
             );
@@ -66,7 +66,7 @@ namespace inmobiliariaAST.Controllers{
 
             //si no es valido, volvemos a mostrar el form
             ViewBag.Inmuebles = new SelectList(
-                repoInmueble.GetInmuebles(), 
+                repoInmueble.Get(), 
                 "ID_inmueble", 
                 "Direccion"
             );
@@ -87,7 +87,7 @@ namespace inmobiliariaAST.Controllers{
 
             //recuperar la lista de inmuebles e inquilinos 
             ViewBag.Inmuebles = new SelectList(
-                repoInmueble.GetInmuebles(),
+                repoInmueble.Get(),
                 "ID_inmueble", 
                 "Direccion",
                 contrato.ID_inmueble
@@ -125,7 +125,7 @@ namespace inmobiliariaAST.Controllers{
 
             //si no es valido, volvemos a mostrar el form
             ViewBag.Inmuebles = new SelectList(
-                repoInmueble.GetInmuebles(), 
+                repoInmueble.Get(), 
                 "ID_inmueble", 
                 "Direccion",
                 contrato.ID_inmueble

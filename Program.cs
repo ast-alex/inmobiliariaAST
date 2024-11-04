@@ -5,7 +5,8 @@ using inmobiliariaAST.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
-using System.Configuration;
+
+
 var builder = WebApplication.CreateBuilder(args);
 
  builder.WebHost.UseUrls("http://localhost:5166","https://localhost:5167", "http://*:5166", "https://*:5167");
@@ -15,6 +16,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<RepositorioUsuario>();
 builder.Services.AddScoped<AuthenticationService>();
 builder.Services.AddScoped<IRepositorioPropietario, RepositorioPropietario>();
+builder.Services.AddScoped<IRepositorioInmueble, RepositorioInmueble>();
 
 
 
@@ -55,7 +57,10 @@ builder.Services.AddDbContext<DataContext>(
         ServerVersion.AutoDetect(builder.Configuration["ConnectionStrings:DefaultConnection"]))
 );
 
-
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+});
 
 var app = builder.Build();
 

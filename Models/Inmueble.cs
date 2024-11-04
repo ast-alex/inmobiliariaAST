@@ -1,5 +1,7 @@
 namespace inmobiliariaAST.Models;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 
 public class Inmueble{
     [Key]
@@ -24,6 +26,10 @@ public class Inmueble{
     [Required]
     public int ID_propietario { get; set; }
     public Propietario? Propietario { get; set; }
+    public string? Foto { get; set; }
+   [NotMapped]
+    public IFormFile? FotoFile { get; set; }
+
     
 }
 
