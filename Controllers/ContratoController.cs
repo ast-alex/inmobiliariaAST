@@ -24,7 +24,7 @@ namespace inmobiliariaAST.Controllers{
         //listar contratos
         public IActionResult Index()
         {
-            var lista = repoContrato.GetContratos();
+            var lista = repoContrato.Get();
             return View(lista);
         }
 
@@ -79,7 +79,7 @@ namespace inmobiliariaAST.Controllers{
         [HttpGet]
         public IActionResult Edicion(int id)
         {
-            var contrato = repoContrato.Get(id);
+            var contrato = repoContrato.GetId(id);
             if(contrato == null)
             {
                 return NotFound();
@@ -144,7 +144,7 @@ namespace inmobiliariaAST.Controllers{
         //detalles contrato
         public IActionResult Detalles(int id)
         {
-            var contrato = repoContrato.Get(id);
+            var contrato = repoContrato.GetId(id);
             if(contrato == null)
             {
                 return NotFound();

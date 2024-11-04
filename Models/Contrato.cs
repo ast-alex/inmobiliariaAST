@@ -12,6 +12,7 @@ public class Contrato{
     public decimal? Multa { get; set; }
 
     public string? InmuebleDireccion { get; set; }
+    public string? InmuebleFoto { get; set; }
     public string? InquilinoNombreCompleto { get; set; }
 
 }

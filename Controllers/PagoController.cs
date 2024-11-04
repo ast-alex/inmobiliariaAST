@@ -36,7 +36,7 @@ namespace inmobiliariaAST.Controllers
         [HttpGet]
         public IActionResult Crear(){
             //ViewBag.Contratos = new SelectList(repoContrato.GetContratos(), "ID_contrato");
-            var contratos = repoContrato.GetContratos().Select(c => new
+            var contratos = repoContrato.Get().Select(c => new
             {
                 c.ID_contrato,
                 DescripcionContrato = $"{c.InmuebleDireccion} - {c.InquilinoNombreCompleto} (Inicio: {c.Fecha_Inicio.ToShortDateString()})"
@@ -61,7 +61,7 @@ namespace inmobiliariaAST.Controllers
                 return RedirectToAction(nameof(Index));
             }
             
-            var contratos = repoContrato.GetContratos().Select(c => new
+            var contratos = repoContrato.Get().Select(c => new
             {
                 c.ID_contrato,
                 DescripcionContrato = $"{c.InmuebleDireccion} - {c.InquilinoNombreCompleto} (Inicio: {c.Fecha_Inicio.ToShortDateString()})"
