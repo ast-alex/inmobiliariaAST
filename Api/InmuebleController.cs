@@ -10,6 +10,7 @@ using System.Text;
 
 using Microsoft.EntityFrameworkCore;
 using inmobiliariaAST.Services;
+using Inmobiliaria.Models;
 
 
 namespace inmobiliariaAST.Api{
@@ -128,6 +129,56 @@ namespace inmobiliariaAST.Api{
             }
         }
 
+
+        //detalle inmueble especifico
+        [HttpGet("detalle/{id}")]
+        [Authorize]
+        public IActionResult DetalleInmueble(int id)
+        {
+            try
+            {
+                //obtener el email del propietario autenticado desde el token
+                var email = User.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name")?.Value;
+                if (email == null) return Unauthorized("No se pudo obtener el email del propietario autenticado.");
+
+                //verificar si el propietario autenticado es el propietario del inmueble
+                var propietario = repositorioPropietario.GetByEmail(email);
+                if (propietario == null) return NotFound("No se encontró el propietario autenticado.");
+
+                //se obtiene el detalle del inmueble
+                var inmueble = repositorio.GetDetalleInmueble(id);
+                if(inmueble == null){
+                    return NotFound("No se encontró el inmueble.");
+                }
+
+                //verificar si el inmueble pertenece al propietario autenticado
+                if(inmueble.ID_propietario != propietario.ID_propietario){
+                    return BadRequest("El inmueble no le pertenece al propietario autenticado.");
+                }
+                
+                
+                //vm detalle
+                var inmuebleVM = new InmuebleDetalleViewModel
+                {
+                    ID_inmueble = inmueble.ID_inmueble,
+                    Direccion = inmueble.Direccion,
+                    Uso = inmueble.Uso.ToString(),
+                    Tipo = inmueble.Tipo.ToString(),
+                    Cantidad_Ambientes = inmueble.Cantidad_Ambientes,
+                    Latitud = inmueble.Latitud,
+                    Longitud = inmueble.Longitud,
+                    Precio = inmueble.Precio,
+                    Disponibilidad = inmueble.Disponibilidad,
+                    Foto = inmueble.Foto
+                };
+
+                return Ok(inmuebleVM);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
 
 
     }

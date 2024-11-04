@@ -7,6 +7,7 @@ namespace inmobiliariaAST.Models{
     public interface IRepositorioInmueble : IRepositorio<Inmueble>
     {
         IList<Inmueble> GetInmueblesPorPropietario(int idPropietario);
+        Inmueble GetDetalleInmueble(int id);
         
     }
 }

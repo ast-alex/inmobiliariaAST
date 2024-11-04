@@ -238,6 +238,60 @@ public class RepositorioInmueble : IRepositorioInmueble
         return res;
     }
 
+    //detalle inmueble especifico
+    public Inmueble GetDetalleInmueble(int id)
+    {
+        Inmueble? res = null;
+        using (MySqlConnection connection = new MySqlConnection(ConnectionString))
+        {
+            connection.Open();
+            string sql = @"
+                SELECT 
+                    i.ID_inmueble,
+                    i.Direccion,
+                    i.Uso,
+                    i.Tipo,
+                    i.Cantidad_Ambientes,
+                    i.Latitud,
+                    i.Longitud,
+                    i.Precio,
+                    i.Disponibilidad,
+                    i.Foto,
+                    i.ID_propietario
+                FROM 
+                    Inmueble i
+                WHERE 
+                    i.ID_inmueble = @id";
+
+            using (var command = new MySqlCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@id", id);
+                using (var reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        return new Inmueble
+                        {
+                            ID_inmueble = reader.GetInt32(0),
+                            Direccion = reader.GetString(1),
+                            Uso = Enum.Parse<UsoInmueble>(reader.GetString(2)),
+                            Tipo = Enum.Parse<TipoInmueble>(reader.GetString(3)),
+                            Cantidad_Ambientes = reader.GetInt32(4),
+                            Latitud = reader.IsDBNull(5) ? (decimal?)null : reader.GetDecimal(5),
+                            Longitud = reader.IsDBNull(6) ? (decimal?)null : reader.GetDecimal(6),
+                            Precio = reader.GetDecimal(7),
+                            Disponibilidad = reader.GetBoolean(8),
+                            Foto = reader.IsDBNull(9) ? null : reader.GetString(9),
+                            ID_propietario = reader.GetInt32(10)
+                        };
+                    }
+                }
+            }
+        }
+        return res; // Retorna null si no se encuentra el inmueble
+    }
+
+
  
     //Modificar Inmueble
     public int Modificar(Inmueble inmueble)
