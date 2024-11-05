@@ -23,10 +23,12 @@ namespace inmobiliariaAST.Api{
     {
         private readonly IRepositorioInmueble repositorio;
         private readonly IRepositorioPropietario repositorioPropietario;
-        public InmuebleController(IRepositorioInmueble repositorio, IRepositorioPropietario repositorioPropietario)
+        private readonly DataContext _context;
+        public InmuebleController(IRepositorioInmueble repositorio, IRepositorioPropietario repositorioPropietario, DataContext context)
         {       
             this.repositorio = repositorio;
             this.repositorioPropietario = repositorioPropietario;
+            this._context = context;
         }
 
         //obtener inmuebles del propietario autenticado
@@ -51,8 +53,16 @@ namespace inmobiliariaAST.Api{
             int idPropietario = propietario.ID_propietario;
 
             //obtener los inmuebles del propietario autenticado
-            Console.WriteLine($"ID del propietario para consultar inmuebles: {idPropietario}");
-            var inmuebles = repositorio.GetInmueblesPorPropietario(idPropietario);
+            var inmuebles = _context.Inmueble
+                .Where(i => i.ID_propietario == idPropietario)
+                .Select(i => new{
+                    i.ID_inmueble,
+                    i.Direccion,
+                    i.Precio,
+                    i.Foto,
+                    i.ID_propietario
+                }).ToList();
+                
             Console.WriteLine($"Inmuebles encontrados: {inmuebles.Count}");
 
             if(inmuebles == null || inmuebles.Count == 0){
