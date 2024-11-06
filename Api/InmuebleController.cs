@@ -190,6 +190,39 @@ namespace inmobiliariaAST.Api{
             }
         }
 
+        //cambiar disponibilidad PATCH
+        [HttpPatch("disponibilidad/{id}")]
+        [Authorize]
+        public IActionResult ActualizarDisponibilidad (int id, [FromBody] bool disponibilidad)
+        {
+            try{
+                var email = User.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name")?.Value;
+                if (email == null) return Unauthorized("No se pudo obtener el email del propietario autenticado.");
+
+                var propietario = repositorioPropietario.GetByEmail(email);
+                if (propietario == null) return NotFound("No se encontró el propietario autenticado.");
+
+                var inmueble = repositorio.GetDetalleInmueble(id);
+                if (inmueble == null) return NotFound("No se encontró el inmueble.");
+
+                if(inmueble.ID_propietario != propietario.ID_propietario){
+                    return BadRequest("El inmueble no le pertenece al propietario autenticado.");
+                }
+                
+                //actualizar disponibilidad
+                var resultado = repositorio.ActualizarDisponibilidad(id, disponibilidad);
+                if (resultado == 0)
+                {
+                    return BadRequest("No se pudo actualizar la disponibilidad.");
+                }
+                
+                return Ok("Disponibilidad cambiada exitosamente a: " + disponibilidad);
+
+            }catch(Exception ex){
+                return StatusCode(500, ex.Message);
+            }
+        }
+
 
     }
 }

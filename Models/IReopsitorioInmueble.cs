@@ -8,6 +8,7 @@ namespace inmobiliariaAST.Models{
     {
         IList<Inmueble> GetInmueblesPorPropietario(int idPropietario);
         Inmueble GetDetalleInmueble(int id);
+        int ActualizarDisponibilidad(int id, bool disponibilidad);
         
     }
 }

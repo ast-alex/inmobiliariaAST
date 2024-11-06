@@ -1,5 +1,6 @@
 namespace Inmobiliaria.Models;
 
+
 public class InmuebleDetalleViewModel{
     public int ID_inmueble { get; set; }
     
@@ -20,4 +21,5 @@ public class InmuebleDetalleViewModel{
     public bool Disponibilidad { get; set; } 
     
     public string? Foto { get; set; }
+
 }

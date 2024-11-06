@@ -8,6 +8,8 @@ public class RepositorioInmueble : IRepositorioInmueble
 {
     private string ConnectionString = "Server=localhost;User=root;Password=;Database=inm;SslMode=none";
 
+    
+
     //Obtener Inmuebles
     public List<Inmueble> Get()
     {
@@ -291,6 +293,26 @@ public class RepositorioInmueble : IRepositorioInmueble
         return res; // Retorna null si no se encuentra el inmueble
     }
 
+    //actualizar disponibilidad inmueble
+    public int ActualizarDisponibilidad(int id, bool disponibilidad)
+    {
+        int res = -1;
+        using (MySqlConnection connection = new MySqlConnection(ConnectionString))
+        {
+            var query = @"UPDATE inmueble SET 
+                        Disponibilidad = @disponibilidad
+                        WHERE ID_inmueble = @id ;";
+            using (MySqlCommand command = new MySqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@id", id);
+                command.Parameters.AddWithValue("@disponibilidad", disponibilidad);
+                connection.Open();
+                res = command.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
+        return res;
+    }
 
  
     //Modificar Inmueble

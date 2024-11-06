@@ -1,6 +1,10 @@
 namespace inmobiliariaAST.Models;
 
+using System.ComponentModel.DataAnnotations;
+
 public class Contrato{
+
+    [Key]
     public int ID_contrato { get; set; }
     public int ID_inmueble { get; set; }
     public int ID_inquilino { get; set; }
