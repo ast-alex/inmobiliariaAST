@@ -236,6 +236,58 @@ namespace inmobiliariaAST.Models
             return contrato;
         }
 
+        public Inquilino GetInquilinoPorInmueble(int inmuebleId, int propietarioId){
+            Inquilino? inquilino = null;
+            using (MySqlConnection connection = new MySqlConnection(ConnectionString))
+            {
+                var query = @"
+                    SELECT
+                        i.ID_inquilino,
+                        i.Nombre AS Inquilino_Nombre,
+                        i.Apellido AS Inquilino_Apellido,
+                        i.DNI AS Inquilino_DNI,
+                        i.Telefono AS Inquilino_Telefono,
+                        i.Email AS Inquilino_Email,
+                        i.Direccion AS Inquilino_Direccion,
+                        i.Estado
+                    FROM
+                        Contrato c
+                    JOIN
+                        Inquilino i ON c.ID_inquilino = i.ID_inquilino
+                    JOIN
+                        Inmueble inm ON c.ID_inmueble = inm.ID_inmueble
+                    WHERE
+                        inm.ID_inmueble = @inmuebleId AND c.Estado = true AND inm.ID_propietario = @propietarioId";
+
+                using (MySqlCommand command = new MySqlCommand(query, connection)){
+                    command.Parameters.AddWithValue("@inmuebleId", inmuebleId);
+                    command.Parameters.AddWithValue("@propietarioId", propietarioId);
+
+                    connection.Open();
+                    var reader = command.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        inquilino = new Inquilino
+                        {
+                            ID_inquilino = reader.GetInt32(0),
+                            Nombre = reader.GetString(1),
+                            Apellido = reader.GetString(2),
+                            DNI = reader.GetString(3),
+                            Telefono = reader.GetString(4),
+                            Email = reader.GetString(5),
+                            Direccion = reader.GetString(6),
+                            Estado = reader.GetBoolean(7)
+
+                        };
+                    }
+                    connection.Close();
+                }
+                return inquilino;
+            }
+
+        }
+
 
         //alta contrato
         public void Alta(Contrato contrato)

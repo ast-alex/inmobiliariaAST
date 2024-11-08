@@ -5,5 +5,6 @@ namespace inmobiliariaAST.Models
         IEnumerable<Contrato> ListarContratosPorPropietario(int idPropietario);
         Contrato GetId(int id);
         Contrato GetDetalle(int idContrato, int idPropietario);
+        Inquilino GetInquilinoPorInmueble(int inmuebleId, int propietarioId);
     }
 }

@@ -18,6 +18,7 @@ builder.Services.AddScoped<AuthenticationService>();
 builder.Services.AddScoped<IRepositorioPropietario, RepositorioPropietario>();
 builder.Services.AddScoped<IRepositorioInmueble, RepositorioInmueble>();
 builder.Services.AddScoped<IRepositorioContrato, RepositorioContrato>();
+builder.Services.AddScoped<IRepositorioInquilino, RepositorioInquilino>();
 
 
 

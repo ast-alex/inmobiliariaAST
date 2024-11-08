@@ -314,6 +314,45 @@ public class RepositorioInmueble : IRepositorioInmueble
         return res;
     }
 
+
+    public IEnumerable<Inmueble> ListarInmueblesAlquilados(int idPropietario){
+        List<Inmueble> inmuebles = new List<Inmueble>();
+        using (MySqlConnection connection = new MySqlConnection(ConnectionString))
+        {
+            var query = @"
+                SELECT 
+                    i.ID_inmueble,
+                    i.Direccion AS Inmueble_Direccion,
+                    i.Foto
+                FROM 
+                    Inmueble i
+                JOIN 
+                    Contrato c ON i.ID_inmueble = c.ID_inmueble
+                JOIN
+                    Propietario p ON i.ID_propietario = p.ID_propietario
+                WHERE 
+                    p.ID_propietario = @idPropietario AND c.Estado = true";
+            using (MySqlCommand command = new MySqlCommand(query, connection))            
+            {
+                command.Parameters.AddWithValue("@idPropietario", idPropietario);
+                connection.Open();
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    inmuebles.Add(new Inmueble
+                    {
+                        ID_inmueble = reader.GetInt32(0),
+                        Direccion = reader.GetString(1),
+                        Foto = reader.IsDBNull(2) ? null : reader.GetString(2)
+                    });
+                }
+                connection.Close();
+            }
+        }
+        return inmuebles;
+    }
+            
+    
  
     //Modificar Inmueble
     public int Modificar(Inmueble inmueble)

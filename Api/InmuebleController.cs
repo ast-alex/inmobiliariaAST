@@ -224,5 +224,27 @@ namespace inmobiliariaAST.Api{
         }
 
 
+        [HttpGet("alquilados")]
+        [Authorize]
+        public IActionResult ListarInmueblesAlquilados()
+        {
+            try
+            {
+                var email = User.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name")?.Value;
+                if (email == null) return Unauthorized("No se pudo obtener el email del propietario autenticado.");
+
+                var propietario = repositorioPropietario.GetByEmail(email);         
+                if (propietario == null) return NotFound("No se encontró el propietario autenticado.");
+
+                var inmueblesAlquilados = repositorio.ListarInmueblesAlquilados(propietario.ID_propietario);
+
+                return Ok(inmueblesAlquilados);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
     }
 }
