@@ -34,15 +34,14 @@ namespace inmobiliariaAST.Api{
                 var contratos = repoContrato.ListarContratosPorPropietario(propietario.ID_propietario);
 
                 var inmueblesAlquilados = contratos.Select(c=>new{
+                    c.ID_contrato,
                     c.ID_inmueble,
                     c.InmuebleDireccion,
                     c.InmuebleFoto,
                     c.Fecha_Inicio,
                     c.Fecha_Fin,
                     c.Monto_Mensual,
-                    c.InquilinoNombreCompleto,
-                    c.Fecha_Terminacion_Anticipada,
-                    c.Multa
+                    c.InquilinoNombreCompleto
                 }).ToList();
 
                 return Ok(inmueblesAlquilados);
@@ -52,9 +51,9 @@ namespace inmobiliariaAST.Api{
         }
 
         //detalle contrato
-        [HttpGet("detalle/{idInmueble}")]
+        [HttpGet("detalle/{idContrato}")]
         [Authorize]
-        public IActionResult ObtenerDetalleContrato(int idInmueble)
+        public IActionResult ObtenerDetalleContrato(int idContrato)
         {
             try
             {
@@ -64,19 +63,18 @@ namespace inmobiliariaAST.Api{
                 var propietario = repositorioPropietario.GetByEmail(email);
                 if(propietario == null) return NotFound("No se encontró el propietario autenticado.");
 
-                var contrato = repoContrato.GetDetalle(idInmueble, propietario.ID_propietario);
+                var contrato = repoContrato.GetDetalle(idContrato, propietario.ID_propietario);
                 if(contrato == null) return NotFound("No se encontró un contrato activo para este inmueble.");
 
                 var detalleContrato = new {
+                    contrato.ID_contrato,
                     contrato.ID_inmueble,
                     contrato.InmuebleDireccion,
                     contrato.InmuebleFoto,
-                    contrato.Fecha_Inicio,
-                    contrato.Fecha_Fin,
-                    contrato.Monto_Mensual,
                     contrato.InquilinoNombreCompleto,
-                    contrato.Fecha_Terminacion_Anticipada,
-                    contrato.Multa
+                    Fecha_Inicio = contrato.Fecha_Inicio.ToString("dd/MM/yyyy"),
+                    Fecha_Fin = contrato.Fecha_Fin.ToString("dd/MM/yyyy"),
+                    contrato.Monto_Mensual,
                 };
 
                 return Ok(detalleContrato);

@@ -174,7 +174,7 @@ namespace inmobiliariaAST.Models
         }
 
         // detalle contrato
-        public Contrato GetDetalle(int idInmueble, int idPropietario)
+        public Contrato GetDetalle(int idContrato, int idPropietario)
         {
             Contrato? contrato = null;
             using (MySqlConnection connection = new MySqlConnection(ConnectionString))
@@ -203,11 +203,11 @@ namespace inmobiliariaAST.Models
                     JOIN
                         Inquilino inq ON c.ID_inquilino = inq.ID_inquilino
                     WHERE
-                        c.Estado = true AND i.ID_inmueble = @idInmueble AND p.ID_propietario = @idPropietario";
+                        c.Estado = true AND c.ID_contrato = @idContrato AND p.ID_propietario = @idPropietario";
                 
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@idInmueble", idInmueble);
+                    command.Parameters.AddWithValue("@idContrato", idContrato);
                     command.Parameters.AddWithValue("@idPropietario", idPropietario);
 
                     using (MySqlDataReader reader = command.ExecuteReader())
