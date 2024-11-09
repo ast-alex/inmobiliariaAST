@@ -29,5 +29,9 @@ public class Propietario
     public IFormFile? AvatarFile { get; set; }
     public const string AvatarDefault = "/uploads/avatars/default.jpg";
 
+    public string? ResetToken { get; set; }
+
+    public DateTime? ResetTokenExpiry { get; set; }
+
     
 }

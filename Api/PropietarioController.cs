@@ -194,9 +194,6 @@ namespace inmobiliariaAST.Api
                      }
 
                      propietario.Avatar = "/uploads/avatars/" + uniqueFileName;
-
-                 }else{
-                     propietario.Avatar = Propietario.AvatarDefault;
                  }
 
                 //guardar cambios en la base de datos
@@ -258,74 +255,74 @@ namespace inmobiliariaAST.Api
             }
         }
 
-        //resetear password via email
-        [HttpPost("forgot-password")]
-        [AllowAnonymous]
-        public async Task<IActionResult> ForgotPassword([FromForm] string email)
-        {
+        // //resetear password via email
+        // [HttpPost("forgot-password")]
+        // [AllowAnonymous]
+        // public async Task<IActionResult> ForgotPassword([FromForm] string email)
+        // {
             
-            try
-            {
-                // Buscar el propietario en la base de datos por email
-                var propietario = await _context.Propietario.FirstOrDefaultAsync(x => x.Email == email);
+        //     try
+        //     {
+        //         // Buscar el propietario en la base de datos por email
+        //         var propietario = await _context.Propietario.FirstOrDefaultAsync(x => x.Email == email);
 
-                if(string.IsNullOrEmpty(email))
-                {
-                    return BadRequest("El email es requerido.");
-                }
+        //         if(string.IsNullOrEmpty(email))
+        //         {
+        //             return BadRequest("El email es requerido.");
+        //         }
                 
-                if (propietario == null)
-                {
-                    return NotFound("Propietario no encontrado.");
-                }
-                Console.WriteLine($"Propietario encontrado: {propietario.Nombre}");
+        //         if (propietario == null)
+        //         {
+        //             return NotFound("Propietario no encontrado.");
+        //         }
+        //         Console.WriteLine($"Propietario encontrado: {propietario.Nombre}");
 
-                //generar enlace de restablecimiento de contraseña
-                var token = Guid.NewGuid().ToString();
-                var resetUrl = $"{_config["AppUrl"]}/reset-password?email={email}&token={token}";
+        //         //generar enlace de restablecimiento de contraseña
+        //         var token = Guid.NewGuid().ToString();
+        //         var resetUrl = $"{_config["AppUrl"]}/reset-password?email={email}&token={token}";
 
-                // Enviar el enlace de restablecimiento de contraseña al correo del propietario
-                var message = new MimeMessage();
-                message.From.Add(new MailboxAddress("Inmobiliaria AST" , "inmoast@gmail.com"));
-                message.To.Add(new MailboxAddress(propietario.Nombre ?? "Usuario Desconocido", propietario.Email ?? "email_no_encontrado@ejemplo.com"));
-                message.Subject = "Restablecer contraseña";
-                message.Body = new TextPart("html")
-                {
-                    Text = $@"
-                        <html>
-                            <body>
-                                <h2>Hola {propietario.Nombre}, has solicitado restablecer tu contraseña.</p>
-                                <p>Para restablecer tu contraseña, haz clic en el siguiente enlace:</p>
-                                <p><a href='{resetUrl}'>Restablecer contraseña</a></p>
-                                <p>Si no has solicitado restablecer tu contraseña, puedes ignorar este correo.</p>
-                            </body>"
-                };
+        //         // Enviar el enlace de restablecimiento de contraseña al correo del propietario
+        //         var message = new MimeMessage();
+        //         message.From.Add(new MailboxAddress("Inmobiliaria AST" , "inmoast@gmail.com"));
+        //         message.To.Add(new MailboxAddress(propietario.Nombre ?? "Usuario Desconocido", propietario.Email ?? "email_no_encontrado@ejemplo.com"));
+        //         message.Subject = "Restablecer contraseña";
+        //         message.Body = new TextPart("html")
+        //         {
+        //             Text = $@"
+        //                 <html>
+        //                     <body>
+        //                         <h2>Hola {propietario.Nombre}, has solicitado restablecer tu contraseña.</p>
+        //                         <p>Para restablecer tu contraseña, haz clic en el siguiente enlace:</p>
+        //                         <p><a href='{resetUrl}'>Restablecer contraseña</a></p>
+        //                         <p>Si no has solicitado restablecer tu contraseña, puedes ignorar este correo.</p>
+        //                     </body>"
+        //         };
                 
                 
-                //credenciales
-                var smtpUser = _config["SMTP:SMTPUser"];
-                var smtpPassword = _config["SMTP:SMTPPassword"];
+        //         //credenciales
+        //         var smtpUser = _config["SMTP:SMTPUser"];
+        //         var smtpPassword = _config["SMTP:SMTPPassword"];
 
-                using var client = new SmtpClient();
-                client.ServerCertificateValidationCallback = (s, c, h, e) => true;
-                await client.ConnectAsync("sandbox.smtp.mailtrap.io", 2525, SecureSocketOptions.StartTls);
+        //         using var client = new SmtpClient();
+        //         client.ServerCertificateValidationCallback = (s, c, h, e) => true;
+        //         await client.ConnectAsync("sandbox.smtp.mailtrap.io", 2525, SecureSocketOptions.StartTls);
 
 
-                if(String.IsNullOrEmpty(smtpUser) || String.IsNullOrEmpty(smtpPassword)){
-                    return BadRequest("Credenciales SMTP no configuradas.");
-                }
+        //         if(String.IsNullOrEmpty(smtpUser) || String.IsNullOrEmpty(smtpPassword)){
+        //             return BadRequest("Credenciales SMTP no configuradas.");
+        //         }
 
-                await client.AuthenticateAsync(smtpUser, smtpPassword);
-                await client.SendAsync(message);
-                await client.DisconnectAsync(true);
+        //         await client.AuthenticateAsync(smtpUser, smtpPassword);
+        //         await client.SendAsync(message);
+        //         await client.DisconnectAsync(true);
 
-                return Ok("Enlace de restablecimiento de contraseña enviado al correo del propietario.");
-            }
-            catch(Exception ex){
-                    Console.WriteLine($"Ocurrió un error en ForgotPassword: {ex.Message}");
-                    return BadRequest($"Ocurrió un error: {ex.Message}");
-            }
-        }
+        //         return Ok("Enlace de restablecimiento de contraseña enviado al correo del propietario.");
+        //     }
+        //     catch(Exception ex){
+        //             Console.WriteLine($"Ocurrió un error en ForgotPassword: {ex.Message}");
+        //             return BadRequest($"Ocurrió un error: {ex.Message}");
+        //     }
+        // }
 
         [HttpPost("reset-password")]
         [AllowAnonymous]
@@ -361,6 +358,107 @@ namespace inmobiliariaAST.Api
                 return BadRequest($"Ocurrio un error: {ex.Message}");
             }
         }
-       
+
+        [HttpPost("forgot-password")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ForgotPassword([FromForm] string email)
+        {
+            try
+            {
+                // Buscar el propietario por el correo electrónico
+                var propietario = await _context.Propietario.FirstOrDefaultAsync(x => x.Email == email);
+
+                if (string.IsNullOrEmpty(email))
+                {
+                    return BadRequest("El email es requerido.");
+                }
+
+                if (propietario == null)
+                {
+                    return NotFound("Propietario no encontrado.");
+                }
+
+                // Generar token único
+                var token = Guid.NewGuid().ToString();
+
+                // Establecer token y su fecha de expiración
+                propietario.ResetToken = token;
+                propietario.ResetTokenExpiry = DateTime.UtcNow.AddHours(1); // Token válido por 1 hora
+                await _context.SaveChangesAsync();
+
+                // Generar el enlace de restablecimiento
+                var resetLink = $"{Request.Scheme}://{Request.Host}/api/Propietario/{propietario.ID_propietario}/restablecer-contrasena?token={token}";
+
+                // Enviar el correo con el enlace de restablecimiento
+                await EnviarCorreoAsync(email, "Restablecimiento de Contraseña", $"Haga clic en el siguiente enlace para restablecer su contraseña: {resetLink}");
+
+                return Ok("Se ha enviado un enlace de restablecimiento de contraseña a su correo electrónico.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Ocurrió un error: {ex.Message}");
+            }
+        }
+
+        private async Task EnviarCorreoAsync(string destinatario, string asunto, string cuerpo)
+        {
+            var mensaje = new MimeMessage();
+            mensaje.From.Add(new MailboxAddress("Inmobiliaria AST", _config["SMTP_User"]));
+            mensaje.To.Add(new MailboxAddress(destinatario, destinatario));
+            mensaje.Subject = asunto;
+            mensaje.Body = new TextPart("plain") { Text = cuerpo };
+
+            using var cliente = new SmtpClient();
+            if(int.TryParse(_config["SMTP_Port"], out int smtpport)){
+                await cliente.ConnectAsync(_config["SMTP_Host"], smtpport, true);
+            }else{
+                throw new ArgumentException("El puerto SMTP debe ser un entero.");
+            }
+
+            await cliente.AuthenticateAsync(_config["SMTP_User"], _config["SMTP_Pass"]);
+            await cliente.SendAsync(mensaje);
+            await cliente.DisconnectAsync(true);
+        }
+
+        [HttpPost("{id}/restablecer-contrasena")]
+        public async Task<IActionResult> RestablecerContraseña(int id, [FromBody] RestablecerContrasenaRequest request)
+        {
+            try
+            {
+                // Buscar al propietario por su ID
+                var propietario = await _context.Propietario.FindAsync(id);
+                if (propietario == null)
+                {
+                    return NotFound("Propietario no encontrado.");
+                }
+
+                // Verificar el token de restablecimiento
+                if (propietario.ResetToken != request.Token || propietario.ResetTokenExpiry < DateTime.UtcNow)
+                {
+                    return BadRequest("Token de restablecimiento inválido o expirado.");
+                }
+
+                // Actualizar la contraseña
+                propietario.Password = _authService.HashPassword(request.NuevaContrasena); // Asegúrate de usar un método para hashear la contraseña
+                propietario.ResetToken = null; // Limpiar el token de restablecimiento
+                propietario.ResetTokenExpiry = null; // Limpiar la fecha de expiración del token
+
+                await _context.SaveChangesAsync();
+
+                return Ok("Contraseña restablecida con éxito.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Ocurrió un error: {ex.Message}");
+            }
+        }
+
+            
     }
+}
+
+public class RestablecerContrasenaRequest
+{
+    public string? Token { get; set; }
+    public string? NuevaContrasena { get; set; }
 }

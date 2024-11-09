@@ -1,6 +1,7 @@
 using inmobiliariaAST.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using DotNetEnv;
 using inmobiliariaAST.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -8,6 +9,13 @@ using Microsoft.EntityFrameworkCore;
 
 
 var builder = WebApplication.CreateBuilder(args);
+//cargar variables de entorno .env
+Env.Load();
+builder.Configuration.AddEnvironmentVariables();
+Console.WriteLine("SMTP_Host desde Enviroment: " + Environment.GetEnvironmentVariable("SMTP_Host"));
+Console.WriteLine("SMTP_Port desde Enviroment: " + Environment.GetEnvironmentVariable("SMTP_Port"));
+Console.WriteLine("SMTP_User desde Enviroment: " + Environment.GetEnvironmentVariable("SMTP_User"));
+Console.WriteLine("SMTP_Pass desde Enviroment: " + Environment.GetEnvironmentVariable("SMTP_Pass"));
 
  builder.WebHost.UseUrls("http://localhost:5166","https://localhost:5167", "http://*:5166", "https://*:5167");
 // Add services to the container.
