@@ -255,75 +255,6 @@ namespace inmobiliariaAST.Api
             }
         }
 
-        // //resetear password via email
-        // [HttpPost("forgot-password")]
-        // [AllowAnonymous]
-        // public async Task<IActionResult> ForgotPassword([FromForm] string email)
-        // {
-            
-        //     try
-        //     {
-        //         // Buscar el propietario en la base de datos por email
-        //         var propietario = await _context.Propietario.FirstOrDefaultAsync(x => x.Email == email);
-
-        //         if(string.IsNullOrEmpty(email))
-        //         {
-        //             return BadRequest("El email es requerido.");
-        //         }
-                
-        //         if (propietario == null)
-        //         {
-        //             return NotFound("Propietario no encontrado.");
-        //         }
-        //         Console.WriteLine($"Propietario encontrado: {propietario.Nombre}");
-
-        //         //generar enlace de restablecimiento de contraseña
-        //         var token = Guid.NewGuid().ToString();
-        //         var resetUrl = $"{_config["AppUrl"]}/reset-password?email={email}&token={token}";
-
-        //         // Enviar el enlace de restablecimiento de contraseña al correo del propietario
-        //         var message = new MimeMessage();
-        //         message.From.Add(new MailboxAddress("Inmobiliaria AST" , "inmoast@gmail.com"));
-        //         message.To.Add(new MailboxAddress(propietario.Nombre ?? "Usuario Desconocido", propietario.Email ?? "email_no_encontrado@ejemplo.com"));
-        //         message.Subject = "Restablecer contraseña";
-        //         message.Body = new TextPart("html")
-        //         {
-        //             Text = $@"
-        //                 <html>
-        //                     <body>
-        //                         <h2>Hola {propietario.Nombre}, has solicitado restablecer tu contraseña.</p>
-        //                         <p>Para restablecer tu contraseña, haz clic en el siguiente enlace:</p>
-        //                         <p><a href='{resetUrl}'>Restablecer contraseña</a></p>
-        //                         <p>Si no has solicitado restablecer tu contraseña, puedes ignorar este correo.</p>
-        //                     </body>"
-        //         };
-                
-                
-        //         //credenciales
-        //         var smtpUser = _config["SMTP:SMTPUser"];
-        //         var smtpPassword = _config["SMTP:SMTPPassword"];
-
-        //         using var client = new SmtpClient();
-        //         client.ServerCertificateValidationCallback = (s, c, h, e) => true;
-        //         await client.ConnectAsync("sandbox.smtp.mailtrap.io", 2525, SecureSocketOptions.StartTls);
-
-
-        //         if(String.IsNullOrEmpty(smtpUser) || String.IsNullOrEmpty(smtpPassword)){
-        //             return BadRequest("Credenciales SMTP no configuradas.");
-        //         }
-
-        //         await client.AuthenticateAsync(smtpUser, smtpPassword);
-        //         await client.SendAsync(message);
-        //         await client.DisconnectAsync(true);
-
-        //         return Ok("Enlace de restablecimiento de contraseña enviado al correo del propietario.");
-        //     }
-        //     catch(Exception ex){
-        //             Console.WriteLine($"Ocurrió un error en ForgotPassword: {ex.Message}");
-        //             return BadRequest($"Ocurrió un error: {ex.Message}");
-        //     }
-        // }
-
         [HttpPost("reset-password")]
         [AllowAnonymous]
         public async Task<IActionResult> resetPassword([FromQuery] string email, [FromQuery] string token, [FromBody] ResetPasswordViewModel model){
@@ -387,7 +318,7 @@ namespace inmobiliariaAST.Api
                 await _context.SaveChangesAsync();
 
                 // Generar el enlace de restablecimiento
-                var resetLink = $"{Request.Scheme}://{Request.Host}/api/Propietario/{propietario.ID_propietario}/restablecer-contrasena?token={token}";
+                var resetLink = $"{Request.Scheme}://{Request.Host}/api/Propietario/{propietario.ID_propietario}/change-password?token={token}";
 
                 // Enviar el correo con el enlace de restablecimiento
                 await EnviarCorreoAsync(email, "Restablecimiento de Contraseña", $"Haga clic en el siguiente enlace para restablecer su contraseña: {resetLink}");
@@ -420,7 +351,9 @@ namespace inmobiliariaAST.Api
             await cliente.DisconnectAsync(true);
         }
 
-        [HttpPost("{id}/restablecer-contrasena")]
+        
+
+        [HttpPost("{id}/change-password")]
         public async Task<IActionResult> RestablecerContraseña(int id, [FromBody] RestablecerContrasenaRequest request)
         {
             try
@@ -440,8 +373,8 @@ namespace inmobiliariaAST.Api
 
                 // Actualizar la contraseña
                 propietario.Password = _authService.HashPassword(request.NuevaContrasena); // Asegúrate de usar un método para hashear la contraseña
-                propietario.ResetToken = null; // Limpiar el token de restablecimiento
-                propietario.ResetTokenExpiry = null; // Limpiar la fecha de expiración del token
+                //ropietario.ResetToken = null; // Limpiar el token de restablecimiento
+                //propietario.ResetTokenExpiry = null; // Limpiar la fecha de expiración del token
 
                 await _context.SaveChangesAsync();
 
