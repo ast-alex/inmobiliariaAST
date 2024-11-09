@@ -151,7 +151,7 @@ namespace inmobiliariaAST.Api
 
         ///modificar perfil
         [HttpPut("modificar")]
-        public async Task<IActionResult> Modificar([FromBody] PerfilViewModel model){
+        public async Task<IActionResult> Modificar([FromForm] PerfilViewModel model){
             try{
                 var usuario = User.Identity?.Name;
 
@@ -173,31 +173,31 @@ namespace inmobiliariaAST.Api
                 propietario.Email = model.Email ?? propietario.Email;
                 propietario.Direccion = model.Direccion ?? propietario.Direccion;
 
-                // //manejo del avatar
-                // if(model.AvatarFile != null && model.AvatarFile.Length > 0){
-                //     //lugar donde se guardan los avatar
-                //     var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\uploads\\avatars");
+                //manejo del avatar
+                if(model.AvatarFile != null && model.AvatarFile.Length > 0){
+                     //lugar donde se guardan los avatar
+                     var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\uploads\\avatars");
 
-                //     if(!Directory.Exists(uploadsFolder)){
-                //         Directory.CreateDirectory(uploadsFolder);
-                //     }
+                     if(!Directory.Exists(uploadsFolder)){
+                         Directory.CreateDirectory(uploadsFolder);
+                     }
 
-                //     //generar un nombre de archivo unico
-                //     var uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(model.AvatarFile.FileName);
+                     //generar un nombre de archivo unico
+                     var uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(model.AvatarFile.FileName);
 
-                //     //crear la ruta completa del archivo
-                //     var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                     //crear la ruta completa del archivo
+                     var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
-                //     //guardar el archivo en el server
-                //     using(var fileStream = new FileStream(filePath, FileMode.Create)){
-                //         model.AvatarFile.CopyTo(fileStream);
-                //     }
+                     //guardar el archivo en el server
+                     using(var fileStream = new FileStream(filePath, FileMode.Create)){
+                         model.AvatarFile.CopyTo(fileStream);
+                     }
 
-                //     propietario.Avatar = "/uploads/avatars/" + uniqueFileName;
+                     propietario.Avatar = "/uploads/avatars/" + uniqueFileName;
 
-                // }else{
-                //     propietario.Avatar = Propietario.AvatarDefault;
-                // }
+                 }else{
+                     propietario.Avatar = Propietario.AvatarDefault;
+                 }
 
                 //guardar cambios en la base de datos
                 _context.Entry(propietario).State = EntityState.Modified;
@@ -210,7 +210,7 @@ namespace inmobiliariaAST.Api
                     propietario.Telefono,
                     propietario.Email,
                     propietario.Direccion,
-                    //propietario.Avatar
+                    propietario.Avatar
                 });
             }
             catch(Exception ex){
