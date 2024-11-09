@@ -22,7 +22,7 @@ namespace inmobiliariaAST.Api{
         }
 
         //obtener inquilino asociado al inmueble
-        [HttpGet("inquilino/{inmuebleId}")]
+        [HttpGet("{inmuebleId}")]
         [Authorize]
         public IActionResult getInquilino(int inmuebleId){
             
