@@ -149,11 +149,11 @@ namespace inmobiliariaAST.Api{
                 if (email == null) return Unauthorized("No se pudo obtener el email del propietario autenticado.");
 
                 //verificar si el propietario autenticado es el propietario del inmueble
-                var propietario = repositorioPropietario.GetByEmail(email);
+                var propietario = _context.Propietario.FirstOrDefault(p => p.Email == email);
                 if (propietario == null) return NotFound("No se encontró el propietario autenticado.");
 
                 //se obtiene el detalle del inmueble
-                var inmueble = repositorio.GetDetalleInmueble(id);
+                var inmueble = _context.Inmueble.FirstOrDefault(i => i.ID_inmueble == id);
                 if(inmueble == null){
                     return NotFound("No se encontró el inmueble.");
                 }
@@ -196,10 +196,10 @@ namespace inmobiliariaAST.Api{
                 var email = User.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name")?.Value;
                 if (email == null) return Unauthorized("No se pudo obtener el email del propietario autenticado.");
 
-                var propietario = repositorioPropietario.GetByEmail(email);
+                var propietario = _context.Propietario.FirstOrDefault(p => p.Email == email);
                 if (propietario == null) return NotFound("No se encontró el propietario autenticado.");
 
-                var inmueble = repositorio.GetDetalleInmueble(id);
+                var inmueble = _context.Inmueble.FirstOrDefault(i => i.ID_inmueble == id);
                 if (inmueble == null) return NotFound("No se encontró el inmueble.");
 
                 if(inmueble.ID_propietario != propietario.ID_propietario){
@@ -207,11 +207,8 @@ namespace inmobiliariaAST.Api{
                 }
                 
                 //actualizar disponibilidad
-                var resultado = repositorio.ActualizarDisponibilidad(id, disponibilidad);
-                if (resultado == 0)
-                {
-                    return BadRequest("No se pudo actualizar la disponibilidad.");
-                }
+                inmueble.Disponibilidad = disponibilidad;
+                _context.SaveChanges();
                 
                 return Ok("Disponibilidad cambiada exitosamente a: " + disponibilidad);
 
@@ -230,10 +227,19 @@ namespace inmobiliariaAST.Api{
                 var email = User.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name")?.Value;
                 if (email == null) return Unauthorized("No se pudo obtener el email del propietario autenticado.");
 
-                var propietario = repositorioPropietario.GetByEmail(email);         
+                var propietario = _context.Propietario.FirstOrDefault(p => p.Email == email);       
                 if (propietario == null) return NotFound("No se encontró el propietario autenticado.");
 
-                var inmueblesAlquilados = repositorio.ListarInmueblesAlquilados(propietario.ID_propietario);
+                var inmueblesAlquilados = _context.Inmueble
+                    .Where(i => i.ID_propietario == propietario.ID_propietario && 
+                                _context.Contrato.Any(c => c.ID_inmueble == i.ID_inmueble && c.Estado == true)) // Contratos con estado activo
+                    .Select(i => new
+                    {
+                        i.ID_inmueble,
+                        i.Direccion,
+                        i.Foto
+                    })
+                    .ToList();
 
                 return Ok(inmueblesAlquilados);
             }

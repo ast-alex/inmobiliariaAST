@@ -13,10 +13,12 @@ namespace inmobiliariaAST.Api{
 
         private readonly IRepositorioContrato repoContrato;
         private readonly IRepositorioPropietario repositorioPropietario;
+        private readonly DataContext _context;
 
-        public ContratoController(IRepositorioContrato repoContrato){
+        public ContratoController(IRepositorioContrato repoContrato, DataContext context){
             this.repoContrato = repoContrato;
             this.repositorioPropietario = new RepositorioPropietario();
+            this._context = context;
         }
 
         //listar contratos
@@ -28,7 +30,7 @@ namespace inmobiliariaAST.Api{
                 var email = User.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name")?.Value;
                 if(email == null) return Unauthorized("No se pudo obtener el email del propietario autenticado.");
 
-                var propietario = repositorioPropietario.GetByEmail(email);
+                var propietario = _context.Propietario.FirstOrDefault(p => p.Email == email);
                 if(propietario == null) return NotFound("No se encontró el propietario autenticado.");
 
                 var contratos = repoContrato.ListarContratosPorPropietario(propietario.ID_propietario);
@@ -57,7 +59,7 @@ namespace inmobiliariaAST.Api{
                 var email = User.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name")?.Value;
                 if(email == null) return Unauthorized("No se pudo obtener el email del propietario autenticado.");
 
-                var propietario = repositorioPropietario.GetByEmail(email);
+                var propietario = _context.Propietario.FirstOrDefault(p => p.Email == email);
                 if(propietario == null) return NotFound("No se encontró el propietario autenticado.");
 
                 var contrato = repoContrato.GetDetalle(idContrato, propietario.ID_propietario);
