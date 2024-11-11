@@ -163,7 +163,6 @@ namespace inmobiliariaAST.Api{
                     return BadRequest("El inmueble no le pertenece al propietario autenticado.");
                 }
                 
-                
                 //vm detalle
                 var inmuebleVM = new InmuebleDetalleViewModel
                 {
@@ -232,7 +231,7 @@ namespace inmobiliariaAST.Api{
 
                 var inmueblesAlquilados = _context.Inmueble
                     .Where(i => i.ID_propietario == propietario.ID_propietario && 
-                                _context.Contrato.Any(c => c.ID_inmueble == i.ID_inmueble && c.Estado == true)) // Contratos con estado activo
+                                _context.Contrato.Any(c => c.ID_inmueble == i.ID_inmueble && c.Estado == true)) 
                     .Select(i => new
                     {
                         i.ID_inmueble,

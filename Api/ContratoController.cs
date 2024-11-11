@@ -33,17 +33,19 @@ namespace inmobiliariaAST.Api{
                 var propietario = _context.Propietario.FirstOrDefault(p => p.Email == email);
                 if(propietario == null) return NotFound("No se encontró el propietario autenticado.");
 
-                var contratos = repoContrato.ListarContratosPorPropietario(propietario.ID_propietario);
-
-                var inmueblesAlquilados = contratos.Select(c=>new{
-                    c.ID_contrato,
-                    c.ID_inmueble,
-                    c.Fecha_Inicio,
-                    c.Fecha_Fin,
-                    c.Monto_Mensual,
-                }).ToList();
-
-                return Ok(inmueblesAlquilados);
+                 // Obtener los contratos asociados al propietario a través del Inmueble
+                var contrato = _context.Contrato
+                    .Where(c => c.Inmueble.ID_propietario == propietario.ID_propietario && c.Estado)
+                    .Include(c => c.Inmueble)  
+                    .Include(c => c.Inquilino) 
+                    .Select(c => new {
+                        c.ID_contrato,
+                        c.ID_inmueble,
+                        InmuebleDireccion = c.Inmueble.Direccion,  
+                        InmuebleFoto = c.Inmueble.Foto,
+                    })
+                    .ToList();
+                return Ok(contrato);
             }catch(Exception ex){
                 return StatusCode(500, new { Message = ex.Message, StackTrace = ex.StackTrace });
             }
@@ -62,8 +64,13 @@ namespace inmobiliariaAST.Api{
                 var propietario = _context.Propietario.FirstOrDefault(p => p.Email == email);
                 if(propietario == null) return NotFound("No se encontró el propietario autenticado.");
 
-                var contrato = repoContrato.GetDetalle(idContrato, propietario.ID_propietario);
-                if(contrato == null) return NotFound("No se encontró un contrato activo para este inmueble.");
+                var contrato = _context.Contrato
+                    .Where(c => c.ID_contrato == idContrato && c.Inmueble.ID_propietario == propietario.ID_propietario)
+                    .Include(c => c.Inmueble)
+                    .Include(c => c.Inquilino)
+                    .FirstOrDefault();
+
+                if(contrato == null) return NotFound("No se encontró el contrato.");
 
                 var detalleContrato = new {
                     contrato.ID_contrato,
@@ -71,6 +78,9 @@ namespace inmobiliariaAST.Api{
                     Fecha_Inicio = contrato.Fecha_Inicio.ToString("dd/MM/yyyy"),
                     Fecha_Fin = contrato.Fecha_Fin.ToString("dd/MM/yyyy"),
                     contrato.Monto_Mensual,
+                    InmuebleDireccion = contrato.Inmueble.Direccion,
+                    InmuebleFoto = contrato.Inmueble.Foto,
+                    InquilinoNombreCompleto = contrato.Inquilino.Nombre + " " + contrato.Inquilino.Apellido
                 };
 
                 return Ok(detalleContrato);
