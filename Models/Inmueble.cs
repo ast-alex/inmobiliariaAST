@@ -24,6 +24,7 @@ public class Inmueble{
     public bool Estado { get; set; } = true;
     public bool Disponibilidad { get; set; } 
     [Required]
+    [ForeignKey("Propietario")]
     public int ID_propietario { get; set; }
     public Propietario? Propietario { get; set; }
     public string? Foto { get; set; }

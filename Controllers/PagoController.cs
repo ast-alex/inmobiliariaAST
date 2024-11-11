@@ -39,7 +39,7 @@ namespace inmobiliariaAST.Controllers
             var contratos = repoContrato.Get().Select(c => new
             {
                 c.ID_contrato,
-                DescripcionContrato = $"{c.InmuebleDireccion} - {c.InquilinoNombreCompleto} (Inicio: {c.Fecha_Inicio.ToShortDateString()})"
+                // DescripcionContrato = $"{c.InmuebleDireccion} - {c.InquilinoNombreCompleto} (Inicio: {c.Fecha_Inicio.ToShortDateString()})"
             }).ToList();
             
            ViewBag.Contratos = new SelectList(contratos, "ID_contrato", "DescripcionContrato");
@@ -64,7 +64,7 @@ namespace inmobiliariaAST.Controllers
             var contratos = repoContrato.Get().Select(c => new
             {
                 c.ID_contrato,
-                DescripcionContrato = $"{c.InmuebleDireccion} - {c.InquilinoNombreCompleto} (Inicio: {c.Fecha_Inicio.ToShortDateString()})"
+                // DescripcionContrato = $"{c.InmuebleDireccion} - {c.InquilinoNombreCompleto} (Inicio: {c.Fecha_Inicio.ToShortDateString()})"
             }).ToList();
             
            ViewBag.Contratos = new SelectList(contratos, "ID_contrato", "DescripcionContrato");

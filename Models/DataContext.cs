@@ -25,5 +25,9 @@ namespace inmobiliariaAST.Models
         public DbSet<Pago> Pago { get; set; }
     }
     
+
+    
+    
 }
+
 

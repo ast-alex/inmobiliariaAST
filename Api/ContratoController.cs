@@ -36,12 +36,9 @@ namespace inmobiliariaAST.Api{
                 var inmueblesAlquilados = contratos.Select(c=>new{
                     c.ID_contrato,
                     c.ID_inmueble,
-                    c.InmuebleDireccion,
-                    c.InmuebleFoto,
                     c.Fecha_Inicio,
                     c.Fecha_Fin,
                     c.Monto_Mensual,
-                    c.InquilinoNombreCompleto
                 }).ToList();
 
                 return Ok(inmueblesAlquilados);
@@ -69,9 +66,6 @@ namespace inmobiliariaAST.Api{
                 var detalleContrato = new {
                     contrato.ID_contrato,
                     contrato.ID_inmueble,
-                    contrato.InmuebleDireccion,
-                    contrato.InmuebleFoto,
-                    contrato.InquilinoNombreCompleto,
                     Fecha_Inicio = contrato.Fecha_Inicio.ToString("dd/MM/yyyy"),
                     Fecha_Fin = contrato.Fecha_Fin.ToString("dd/MM/yyyy"),
                     contrato.Monto_Mensual,

@@ -87,7 +87,7 @@ namespace inmobiliariaAST.Api{
             }
 
             // Obtener el ID del propietario a partir del email
-            var propietario = repositorioPropietario.GetByEmail(email);
+            var propietario = _context.Propietario.FirstOrDefault(p => p.Email == email);
             if (propietario == null)
             {
                 return NotFound("No se encontró el propietario autenticado.");
@@ -126,14 +126,11 @@ namespace inmobiliariaAST.Api{
             }
 
             // Guardar el inmueble en la base de datos
-            var idInmueble = repositorio.Alta(inmueble);
+            _context.Inmueble.Add(inmueble);
+            _context.SaveChanges();
 
-            if (idInmueble > 0)
-            {
-                return Ok(new { ID_inmueble = idInmueble, inmueble });
-            }
+            return Ok(new { ID_inmueble = inmueble.ID_inmueble, inmueble });
 
-            return BadRequest("No se pudo crear el inmueble.");
             }catch(Exception ex){
                 return StatusCode(500, ex.Message);
             }

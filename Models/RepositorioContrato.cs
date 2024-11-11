@@ -44,9 +44,9 @@ namespace inmobiliariaAST.Models
                                     ? (decimal?)null
                                     : reader.GetDecimal("Multa"),
 
-                                // reemplazo ID_inmueble y ID_inquilino 
-                                InmuebleDireccion = reader.GetString("InmuebleDireccion"),
-                                InquilinoNombreCompleto = reader.GetString("InquilinoNombreCompleto")
+                                // // reemplazo ID_inmueble y ID_inquilino 
+                                // InmuebleDireccion = reader.GetString("InmuebleDireccion"),
+                                // InquilinoNombreCompleto = reader.GetString("InquilinoNombreCompleto")
                             };
 
                             contratos.Add(contrato);
@@ -103,8 +103,8 @@ namespace inmobiliariaAST.Models
                                     : reader.GetDecimal("Multa"),
                                 
                                   // reemplazo ID_inmueble y ID_inquilino 
-                                InmuebleDireccion = reader.GetString("InmuebleDireccion"),
-                                InquilinoNombreCompleto = reader.GetString("InquilinoNombreCompleto")
+                                // InmuebleDireccion = reader.GetString("InmuebleDireccion"),
+                                // InquilinoNombreCompleto = reader.GetString("InquilinoNombreCompleto")
                             };
                         }
                     }
@@ -162,9 +162,9 @@ namespace inmobiliariaAST.Models
                                 Estado = reader.GetBoolean(6),
                                 Fecha_Terminacion_Anticipada = reader.IsDBNull(7) ? (DateTime?)null : reader.GetDateTime(7),
                                 Multa = reader.IsDBNull(8) ? (decimal?)null : reader.GetDecimal(8),
-                                InmuebleDireccion = reader.IsDBNull(9) ? null : reader.GetString(9),
-                                InmuebleFoto = reader.IsDBNull(10) ? null : reader.GetString(10),
-                                InquilinoNombreCompleto = reader.IsDBNull(11) ? null : reader.GetString(11)
+                                // InmuebleDireccion = reader.IsDBNull(9) ? null : reader.GetString(9),
+                                // InmuebleFoto = reader.IsDBNull(10) ? null : reader.GetString(10),
+                                // InquilinoNombreCompleto = reader.IsDBNull(11) ? null : reader.GetString(11)
                             });
                         }
                     }
@@ -225,9 +225,9 @@ namespace inmobiliariaAST.Models
                                 Estado = reader.GetBoolean(6),
                                 Fecha_Terminacion_Anticipada = reader.IsDBNull(7) ? (DateTime?)null : reader.GetDateTime(7),
                                 Multa = reader.IsDBNull(8) ? (decimal?)null : reader.GetDecimal(8),
-                                InmuebleDireccion = reader.GetString(9),
-                                InmuebleFoto = reader.GetString(10),
-                                InquilinoNombreCompleto = reader.GetString(11)
+                                // InmuebleDireccion = reader.GetString(9),
+                                // InmuebleFoto = reader.GetString(10),
+                                // InquilinoNombreCompleto = reader.GetString(11)
                             };
                         }
                     }
