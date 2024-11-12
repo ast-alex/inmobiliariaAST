@@ -129,7 +129,19 @@ namespace inmobiliariaAST.Api{
             _context.Inmueble.Add(inmueble);
             _context.SaveChanges();
 
-            return Ok(new { ID_inmueble = inmueble.ID_inmueble, inmueble });
+            // Obtener la lista actualizada de inmuebles del propietario
+            var inmuebles = _context.Inmueble
+                .Where(i => i.ID_propietario == propietario.ID_propietario)
+                .Select(i => new
+                {
+                    i.ID_inmueble,
+                    i.Direccion,
+                    i.Precio,
+                    i.Foto,
+                    i.ID_propietario
+                }).ToList();
+
+            return Ok(new { inmuebles});
 
             }catch(Exception ex){
                 return StatusCode(500, ex.Message);
