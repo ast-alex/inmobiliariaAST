@@ -1,9 +1,6 @@
-### FALTA.... 
+### Minimos errores.... 
 
 
-### Administrador: admin@gmail.com - admin
-### Empleado: empleado@gmail.com - root
-
-
-### Proximamente Auditoria:
-Para ver bajas-anulaciones.
+### Usuario:
+astudilloalex07@gmail.com
+password: 123.
