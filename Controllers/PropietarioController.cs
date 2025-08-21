@@ -28,12 +28,13 @@ public class PropietarioController : Controller
      
     public IActionResult Edicion(int id)
     {
-        if(id == 0)
-        return View();
+        if (id == 0)
+        {
+            return View(new Propietario());
+        }
         else
         {
             var propietario = repo.GetId(id);
-            TempData["SuccessMessage"] = "Cambios guardados exitosamente";
             return View(propietario);
         }
     }
@@ -55,6 +56,7 @@ public class PropietarioController : Controller
             repo.Modificar(propietario);
         }
 
+        TempData["SuccessMessage"] = "Cambios guardados exitosamente";
         return RedirectToAction(nameof(Index));
     }
     //detalle propietario

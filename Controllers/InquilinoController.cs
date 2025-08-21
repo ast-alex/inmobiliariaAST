@@ -29,7 +29,6 @@ namespace inmobiliariaAST.Controllers;
             else
             {
                 var inquilino = repo.Get(id);
-                TempData["SuccessMessage"] = "Cambios guardados exitosamente";
                 return View(inquilino);
             }
         }
@@ -46,7 +45,7 @@ namespace inmobiliariaAST.Controllers;
             {
                 repo.Modificar(inquilino);
             }
-
+            TempData["SuccessMessage"] = "Cambios guardados exitosamente";
             return RedirectToAction(nameof(Index));
         }
 

@@ -1,47 +1,40 @@
+@using System.ComponentModel.DataAnnotations
 @model inmobiliariaAST.Models.Inmueble
 
 @{
     ViewData["Title"] = "Editar Inmueble";
-    
 }
 
 <div class="container mt-4">
     <h2 class="text-center">@ViewData["Title"]</h2>
     <hr />
 
-    <form asp-action="Edicion" method="post" class="form-container">
+    <form id="formInmueble" asp-action="Edicion" method="post" class="form-container">
         <div class="form-group">
             <label asp-for="Direccion" class="control-label"></label>
-            <input asp-for="Direccion" class="form-control" placeholder="Ingrese dirección" />
+            <input asp-for="Direccion" class="form-control" placeholder="Ingrese dirección" data-original="@Model.Direccion" />
             <span asp-validation-for="Direccion" class="text-danger"></span>
         </div>
 
         <div class="form-group">
             <label asp-for="Uso" class="control-label"></label>
-            <select asp-for="Uso" class="form-control">
+            <select asp-for="Uso" class="form-control" asp-items="Html.GetEnumSelectList<UsoInmueble>()" >
                 <option value="">Seleccione Uso</option>
-                <option value="Comercial">Comercial</option>
-                <option value="Residencial">Residencial</option>
             </select>
             <span asp-validation-for="Uso" class="text-danger"></span>
         </div>
 
         <div class="form-group">
             <label asp-for="Tipo" class="control-label"></label>
-            <select asp-for="Tipo" class="form-control">
+            <select asp-for="Tipo" class="form-control" asp-items="Html.GetEnumSelectList<TipoInmueble>()">
                 <option value="">Seleccione Tipo</option>
-                <option value="Casa">Casa</option>
-                <option value="Departamento">Departamento</option>
-                <option value="Local">Local</option>
-                <option value="Deposito">Depósito</option>
-                <option value="Otro">Otros..</option>
             </select>
             <span asp-validation-for="Tipo" class="text-danger"></span>
         </div>
 
         <div class="form-group">
             <label asp-for="ID_propietario" class="control-label">Propietario</label>
-            <select asp-for="ID_propietario" class="form-control" asp-items="ViewBag.Propietarios">
+            <select asp-for="ID_propietario" class="form-control" asp-items="ViewBag.Propietarios" data-original="@Model.ID_propietario">
                 <option value="">Seleccione Propietario</option>
             </select>
             <span asp-validation-for="ID_propietario" class="text-danger"></span>
@@ -49,43 +42,31 @@
 
         <div class="form-group">
             <label asp-for="Cantidad_Ambientes" class="control-label"></label>
-            <input asp-for="Cantidad_Ambientes" class="form-control" placeholder="Ingrese cantidad de ambientes" />
+            <input asp-for="Cantidad_Ambientes" class="form-control" placeholder="Ingrese cantidad de ambientes" data-original="@Model.Cantidad_Ambientes" />
             <span asp-validation-for="Cantidad_Ambientes" class="text-danger"></span>
         </div>
 
         <div class="form-group">
             <label asp-for="Latitud" class="control-label"></label>
-            <input asp-for="Latitud" class="form-control" type="number" step="0.000001" placeholder="Ingrese latitud" />
+            <input asp-for="Latitud" class="form-control" type="number" step="0.000001" placeholder="Ingrese latitud" data-original="@Model.Latitud" />
             <span asp-validation-for="Latitud" class="text-danger"></span>
         </div>
 
         <div class="form-group">
             <label asp-for="Longitud" class="control-label"></label>
-            <input asp-for="Longitud" class="form-control" type="number" step="0.000001" placeholder="Ingrese longitud" />
+            <input asp-for="Longitud" class="form-control" type="number" step="0.000001" placeholder="Ingrese longitud" data-original="@Model.Longitud" />
             <span asp-validation-for="Longitud" class="text-danger"></span>
         </div>
 
         <div class="form-group">
             <label asp-for="Precio" class="control-label"></label>
-            <input asp-for="Precio" class="form-control" type="number" step="0.01" placeholder="Ingrese precio" />
+            <input asp-for="Precio" class="form-control" type="number" step="0.01" placeholder="Ingrese precio" data-original="@Model.Precio" />
             <span asp-validation-for="Precio" class="text-danger"></span>
         </div>
-@* 
-        <div class="form-group">
-            <label asp-for="Estado" class="control-label"></label>
-            <select asp-for="Estado" class="form-control">
-                <option value="">Seleccione Estado</option>
-                <option value="true">Activo</option>
-                <option value="false">Inactivo</option>
-            </select>
-            <span asp-validation-for="Estado" class="text-danger"></span>
-        </div> *@
-
-        
 
         <div class="form-group">
             <label asp-for="Estado" class="control-label"></label>
-            @if (User.IsInRole("Administrador")) // Verificar si es administrador
+            @if (User.IsInRole("Administrador"))
             {
                 <select asp-for="Estado" class="form-control">
                     <option value="">Seleccione Estado</option>
@@ -103,10 +84,9 @@
             <span asp-validation-for="Estado" class="text-danger"></span>
         </div>
 
-
         <div class="form-group">
             <label asp-for="Disponibilidad" class="control-label"></label>
-            <select asp-for="Disponibilidad" class="form-control">
+            <select asp-for="Disponibilidad" class="form-control" data-original="@Model.Disponibilidad">
                 <option value="true">Disponible</option>
                 <option value="false">No Disponible</option>
             </select>
@@ -124,4 +104,18 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <text>
+            Swal.fire({
+                title: 'Sin Cambios',
+                text: '@TempData["ErrorMessage"]',
+                icon: 'info',
+                confirmButtonText: 'OK'
+            });
+            </text>
+        }
+    </script>
 }

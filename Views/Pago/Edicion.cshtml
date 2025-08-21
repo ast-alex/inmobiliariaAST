@@ -6,7 +6,7 @@
 
 <h2>Editar Pago Número @Model.Numero_pago</h2>
 
-<form asp-action="Edicion">
+<form id="formPago" asp-action="Edicion" method="post">
     <div class="form-group">
         <label for="Numero_pago">Número de Pago</label>
         <input type="number" asp-for="Numero_pago" class="form-control" readonly />
@@ -24,7 +24,8 @@
 
     <div class="form-group">
         <label for="Concepto">Concepto</label>
-        <input type="text" asp-for="Concepto" class="form-control" />
+        <input type="text" asp-for="Concepto" class="form-control" 
+               data-original="@Model.Concepto" />
     </div>
 
     <input type="hidden" asp-for="ID_pago" />
@@ -33,3 +34,30 @@
     <button type="submit" class="btn btn-primary">Guardar cambios</button>
     <a href="@Url.Action("Index", "Pago", new { idContrato = Model.ID_contrato })" class="btn btn-secondary">Volver</a>
 </form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        document.getElementById('formPago').addEventListener('submit', function(e) {
+            let form = e.target;
+            let changed = false;
+
+            form.querySelectorAll('input[data-original]').forEach(el => {
+                let original = el.dataset.original || "";
+                let value = el.value || "";
+                if(value !== original) changed = true;
+            });
+
+            if(!changed) {
+                e.preventDefault();
+                Swal.fire({
+                    title: 'Sin cambios',
+                    text: 'No se detectaron cambios para guardar.',
+                    icon: 'info',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
+    </script>
+}

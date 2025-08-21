@@ -12,10 +12,10 @@ var builder = WebApplication.CreateBuilder(args);
 //cargar variables de entorno .env
 Env.Load();
 builder.Configuration.AddEnvironmentVariables();
-Console.WriteLine("SMTP_Host desde Enviroment: " + Environment.GetEnvironmentVariable("SMTP_Host"));
-Console.WriteLine("SMTP_Port desde Enviroment: " + Environment.GetEnvironmentVariable("SMTP_Port"));
-Console.WriteLine("SMTP_User desde Enviroment: " + Environment.GetEnvironmentVariable("SMTP_User"));
-Console.WriteLine("SMTP_Pass desde Enviroment: " + Environment.GetEnvironmentVariable("SMTP_Pass"));
+// Console.WriteLine("SMTP_Host desde Enviroment: " + Environment.GetEnvironmentVariable("SMTP_Host"));
+// Console.WriteLine("SMTP_Port desde Enviroment: " + Environment.GetEnvironmentVariable("SMTP_Port"));
+// Console.WriteLine("SMTP_User desde Enviroment: " + Environment.GetEnvironmentVariable("SMTP_User"));
+// Console.WriteLine("SMTP_Pass desde Enviroment: " + Environment.GetEnvironmentVariable("SMTP_Pass"));
 
  builder.WebHost.UseUrls("http://localhost:5166","https://localhost:5167", "http://*:5166", "https://*:5167");
 // Add services to the container.
@@ -31,32 +31,31 @@ builder.Services.AddScoped<IRepositorioInquilino, RepositorioInquilino>();
 
 
 //Configuración de autenticación por cookies
-// builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-//     .AddCookie(options =>
-//     {
-//         options.LoginPath = "/Auth/Login"; // Ruta a tu acción de Login
-//         options.LogoutPath = "/Auth/Logout"; // Ruta a tu acción de Logout
-//         options.AccessDeniedPath = "/Auth/AccessDenied"; // Ruta a tu página de acceso denegado
-//     });
-
-// Configuración de autenticación JWT
-
-
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
     {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["TokenAuthentication:Issuer"],
-            ValidAudience = builder.Configuration["TokenAuthentication:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                builder.Configuration["TokenAuthentication:SecretKey"]))
-        };
+        options.LoginPath = "/Auth/Login"; // Ruta a tu acción de Login
+        options.LogoutPath = "/Auth/Logout"; // Ruta a tu acción de Logout
+        options.AccessDeniedPath = "/Auth/AccessDenied"; // Ruta a tu página de acceso denegado
     });
+
+
+// Configuración de autenticación JWT API
+// builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//     .AddJwtBearer(options =>
+//     {
+//         options.TokenValidationParameters = new TokenValidationParameters
+//         {
+//             ValidateIssuer = true,
+//             ValidateAudience = true,
+//             ValidateLifetime = true,
+//             ValidateIssuerSigningKey = true,
+//             ValidIssuer = builder.Configuration["TokenAuthentication:Issuer"],
+//             ValidAudience = builder.Configuration["TokenAuthentication:Audience"],
+//             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+//                 builder.Configuration["TokenAuthentication:SecretKey"]))
+//         };
+//     });
 
 
 

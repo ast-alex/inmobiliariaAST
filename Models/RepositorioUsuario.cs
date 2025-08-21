@@ -110,6 +110,7 @@ namespace inmobiliariaAST.Models
                     Apellido = @Apellido,
                     Estado = @Estado,
                     Avatar = @Avatar,
+                    Rol = @Rol,
                     Password = @Password
                 WHERE ID_usuario = @ID_usuario";
 
@@ -121,6 +122,7 @@ namespace inmobiliariaAST.Models
                 command.Parameters.AddWithValue("@Apellido", usuario.Apellido);
                 command.Parameters.AddWithValue("@Estado", usuario.Estado);
                 command.Parameters.AddWithValue("@Avatar", usuario.Avatar ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@Rol", usuario.Rol);
                 command.Parameters.AddWithValue("@Password", usuario.Password);
 
                 connection.Open();

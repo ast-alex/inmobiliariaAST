@@ -89,51 +89,85 @@ namespace inmobiliariaAST.Controllers
         [HttpPost]
         public IActionResult Edicion(Inmueble inmueble)
         {
-            if (ModelState.IsValid)
+            // Validar el modelo
+            if (!ModelState.IsValid)
             {
-                var inmuebleExists = repo.GetId(inmueble.ID_inmueble);
-                if (inmuebleExists != null)
-                {
-                    // Verificar si el usuario es administrador antes de permitir el cambio de estado
-                    if (User.IsInRole("Administrador"))
-                    {
-                        // Solo los administradores pueden cambiar el estado
-                        inmuebleExists.Estado = inmueble.Estado;
-                    }
-                    else
-                    {
-                        // Mantener el estado actual si no es administrador
-                        inmuebleExists.Estado = inmuebleExists.Estado; // O puedes omitir esta línea
-                    }
+                TempData["ErrorMessage"] = "Hay campos vacíos. Complete el formulario.";
 
-                    // Actualizar otros campos del inmueble
-                    inmuebleExists.Direccion = inmueble.Direccion;
-                    inmuebleExists.Uso = inmueble.Uso;
-                    inmuebleExists.Tipo = inmueble.Tipo;
-                    inmuebleExists.Cantidad_Ambientes = inmueble.Cantidad_Ambientes;
-                    inmuebleExists.Latitud = inmueble.Latitud;
-                    inmuebleExists.Longitud = inmueble.Longitud;
-                    inmuebleExists.Precio = inmueble.Precio;
-                    inmuebleExists.Disponibilidad = inmueble.Disponibilidad;
+                // Recargar lista de propietarios para el dropdown
+                ViewBag.Propietarios = repoPropietario.Get()
+                    .Select(p => new SelectListItem
+                    {
+                        Value = p.ID_propietario.ToString(),
+                        Text = $"{p.Nombre} {p.Apellido}"
+                    }).ToList();
 
-                    // Llamar al repositorio para modificar el inmueble
-                    repo.Modificar(inmuebleExists);
-                    TempData["SuccessMessage"] = "Cambios guardados exitosamente";
-                    return RedirectToAction("Index"); 
-                }
+                return View(inmueble);
             }
 
-            // En caso de error, recargar la lista de propietarios para el dropdown
-            var propietarios = repoPropietario.Get()
-                .Select(p => new SelectListItem
-                {
-                    Value = p.ID_propietario.ToString(),
-                    Text = $"{p.Nombre} {p.Apellido}"
-                }).ToList();
+            // Buscar el inmueble existente
+            var inmuebleExists = repo.GetId(inmueble.ID_inmueble);
+            if (inmuebleExists == null)
+            {
+                TempData["ErrorMessage"] = "No se encontró el inmueble.";
 
-            ViewBag.Propietarios = propietarios;
-            return View(inmueble);
+                ViewBag.Propietarios = repoPropietario.Get()
+                    .Select(p => new SelectListItem
+                    {
+                        Value = p.ID_propietario.ToString(),
+                        Text = $"{p.Nombre} {p.Apellido}"
+                    }).ToList();
+
+                return View(inmueble);
+            }
+
+            // Verificar si hay cambios reales
+            bool hayCambios =
+                inmuebleExists.Direccion != inmueble.Direccion ||
+                inmuebleExists.Uso != inmueble.Uso ||
+                inmuebleExists.Tipo != inmueble.Tipo ||
+                inmuebleExists.Cantidad_Ambientes != inmueble.Cantidad_Ambientes ||
+                inmuebleExists.Latitud != inmueble.Latitud ||
+                inmuebleExists.Longitud != inmueble.Longitud ||
+                inmuebleExists.Precio != inmueble.Precio ||
+                inmuebleExists.Disponibilidad != inmueble.Disponibilidad ||
+                inmuebleExists.ID_propietario != inmueble.ID_propietario ||
+                (User.IsInRole("Administrador") && inmuebleExists.Estado != inmueble.Estado);
+
+            if (!hayCambios)
+            {
+                TempData["ErrorMessage"] = "No se detectaron cambios para guardar.";
+                ViewBag.Propietarios = repoPropietario.Get()
+                    .Select(p => new SelectListItem
+                    {
+                        Value = p.ID_propietario.ToString(),
+                        Text = $"{p.Nombre} {p.Apellido}"
+                    }).ToList();
+
+                return View(inmueble);
+            }
+
+            // Actualizar campos
+            inmuebleExists.Direccion = inmueble.Direccion;
+            inmuebleExists.Uso = inmueble.Uso;
+            inmuebleExists.Tipo = inmueble.Tipo;
+            inmuebleExists.Cantidad_Ambientes = inmueble.Cantidad_Ambientes;
+            inmuebleExists.Latitud = inmueble.Latitud;
+            inmuebleExists.Longitud = inmueble.Longitud;
+            inmuebleExists.Precio = inmueble.Precio;
+            inmuebleExists.Disponibilidad = inmueble.Disponibilidad;
+            inmuebleExists.ID_propietario = inmueble.ID_propietario;
+
+            if (User.IsInRole("Administrador"))
+                inmuebleExists.Estado = inmueble.Estado;
+
+            // Guardar cambios
+            repo.Modificar(inmuebleExists);
+
+            TempData["SuccessMessage"] = "Cambios guardados exitosamente";
+            return RedirectToAction("Index");
         }
+
 
         //detalles inmueble
         public IActionResult Detalles(int id){

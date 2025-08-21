@@ -48,8 +48,8 @@ public class RepositorioInmueble : IRepositorioInmueble
                     {
                         ID_inmueble = reader.GetInt32(0),
                         Direccion = reader.GetString(1),
-                        Uso = Enum.Parse<UsoInmueble>(reader.GetString(2)),
-                        Tipo = Enum.Parse<TipoInmueble>(reader.GetString(3)),
+                        Uso = (UsoInmueble)reader.GetInt32(2),
+                        Tipo = (TipoInmueble)reader.GetInt32(3),
                         Cantidad_Ambientes = reader.GetInt32(4),
                         Latitud = reader.IsDBNull(5) ? (decimal?)null : reader.GetDecimal(5),
                         Longitud = reader.IsDBNull(6) ? (decimal?)null : reader.GetDecimal(6),
@@ -113,8 +113,8 @@ public class RepositorioInmueble : IRepositorioInmueble
                     {
                         ID_inmueble = reader.GetInt32(0),
                         Direccion = reader.GetString(1),
-                        Uso = Enum.Parse<UsoInmueble>(reader.GetString(2)),
-                        Tipo = Enum.Parse<TipoInmueble>(reader.GetString(3)),
+                        Uso = (UsoInmueble)reader.GetInt32(2),
+                        Tipo = (TipoInmueble)reader.GetInt32(3),
                         Cantidad_Ambientes = reader.GetInt32(4),
                         Latitud = reader.IsDBNull(5) ? (decimal?)null : reader.GetDecimal(5),
                         Longitud = reader.IsDBNull(6) ? (decimal?)null : reader.GetDecimal(6),
@@ -163,7 +163,7 @@ public class RepositorioInmueble : IRepositorioInmueble
                     i.Foto,
                     p.ID_propietario,
                     p.Nombre AS Propietario_Nombre,
-                    p.Apellido AS Propietario_Apellido,
+                    p.Apellido AS Propietario_Apellido
                 FROM 
                     Inmueble i
                 JOIN 
@@ -182,8 +182,8 @@ public class RepositorioInmueble : IRepositorioInmueble
                     {
                         ID_inmueble = reader.GetInt32(0),
                         Direccion = reader.GetString(1),
-                        Uso = Enum.Parse<UsoInmueble>(reader.GetString(2)),
-                        Tipo = Enum.Parse<TipoInmueble>(reader.GetString(3)),
+                        Uso = (UsoInmueble)reader.GetInt32(2),
+                        Tipo = (TipoInmueble)reader.GetInt32(3),
                         Cantidad_Ambientes = reader.GetInt32(4),
                         Latitud = reader.IsDBNull(5) ? (decimal?)null : reader.GetDecimal(5),
                         Longitud = reader.IsDBNull(6) ? (decimal?)null : reader.GetDecimal(6),
@@ -276,8 +276,8 @@ public class RepositorioInmueble : IRepositorioInmueble
                         {
                             ID_inmueble = reader.GetInt32(0),
                             Direccion = reader.GetString(1),
-                            Uso = Enum.Parse<UsoInmueble>(reader.GetString(2)),
-                            Tipo = Enum.Parse<TipoInmueble>(reader.GetString(3)),
+                            Uso = (UsoInmueble)reader.GetInt32(2),
+                            Tipo = (TipoInmueble)reader.GetInt32(3),
                             Cantidad_Ambientes = reader.GetInt32(4),
                             Latitud = reader.IsDBNull(5) ? (decimal?)null : reader.GetDecimal(5),
                             Longitud = reader.IsDBNull(6) ? (decimal?)null : reader.GetDecimal(6),
@@ -376,8 +376,8 @@ public class RepositorioInmueble : IRepositorioInmueble
             {
                 command.Parameters.AddWithValue("@id", inmueble.ID_inmueble);
                 command.Parameters.AddWithValue("@direccion", inmueble.Direccion ?? (object)DBNull.Value);
-                command.Parameters.AddWithValue("@uso", inmueble.Uso.ToString());
-                command.Parameters.AddWithValue("@tipo", inmueble.Tipo.ToString());
+                command.Parameters.AddWithValue("@uso", (int)inmueble.Uso);
+                command.Parameters.AddWithValue("@tipo", (int)inmueble.Tipo);
                 command.Parameters.AddWithValue("@cantidad_ambientes", inmueble.Cantidad_Ambientes);
                 command.Parameters.AddWithValue("@latitud", inmueble.Latitud.HasValue ? (object)inmueble.Latitud.Value : DBNull.Value);
                 command.Parameters.AddWithValue("@longitud", inmueble.Longitud.HasValue ? (object)inmueble.Longitud.Value : DBNull.Value);

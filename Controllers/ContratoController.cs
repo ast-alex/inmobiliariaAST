@@ -37,7 +37,6 @@ namespace inmobiliariaAST.Controllers{
                 "Direccion"
             );
 
-            // Obtener la lista de inquilinos y concatenar nombre y apellido
             var inquilinos = repoInquilino.GetInquilinos()
                 .Select(i => new SelectListItem
                 {

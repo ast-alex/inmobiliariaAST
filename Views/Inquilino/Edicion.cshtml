@@ -1,7 +1,9 @@
 @model inmobiliariaAST.Models.Inquilino
 
 @{
-    ViewData["Title"] = "Editar Inquilino";
+    ViewData["Title"] = Model != null && Model.ID_inquilino > 0
+        ? "Editar Inquilino"
+        : "Nuevo Inquilino";
 }
 
 <div class="container mt-4">
@@ -9,65 +11,106 @@
     <hr />
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <form asp-action="Guardar" method="post" class="form-container">
-                <input type="hidden" asp-for="ID_inquilino" />
+            <form id="formInquilino" asp-action="Guardar" method="post" class="form-container">
+                <input type="hidden" asp-for="ID_inquilino" data-original="@Model?.ID_inquilino" />
+                
                 <div class="form-group">
                     <label asp-for="DNI" class="control-label"></label>
-                    <input asp-for="DNI" class="form-control" placeholder="Ingrese DNI" />
+                    <input asp-for="DNI" class="form-control" placeholder="Ingrese DNI" 
+                           data-original="@Model?.DNI"/>
                     <span asp-validation-for="DNI" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Nombre" class="control-label"></label>
-                    <input asp-for="Nombre" class="form-control" placeholder="Ingrese Nombre" />
+                    <input asp-for="Nombre" class="form-control" placeholder="Ingrese Nombre" 
+                           data-original="@Model?.Nombre"/>
                     <span asp-validation-for="Nombre" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Apellido" class="control-label"></label>
-                    <input asp-for="Apellido" class="form-control" placeholder="Ingrese Apellido" />
+                    <input asp-for="Apellido" class="form-control" placeholder="Ingrese Apellido" 
+                           data-original="@Model?.Apellido"/>
                     <span asp-validation-for="Apellido" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Telefono" class="control-label"></label>
-                    <input asp-for="Telefono" class="form-control" placeholder="Ingrese Teléfono" />
+                    <input asp-for="Telefono" class="form-control" placeholder="Ingrese Teléfono" 
+                           data-original="@Model?.Telefono"/>
                     <span asp-validation-for="Telefono" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Email" class="control-label"></label>
-                    <input asp-for="Email" class="form-control" placeholder="Ingrese Email" />
+                    <input asp-for="Email" class="form-control" placeholder="Ingrese Email" 
+                           data-original="@Model?.Email"/>
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Direccion" class="control-label"></label>
-                    <input asp-for="Direccion" class="form-control" placeholder="Ingrese Dirección" />
+                    <input asp-for="Direccion" class="form-control" placeholder="Ingrese Dirección" 
+                           data-original="@Model?.Direccion"/>
                     <span asp-validation-for="Direccion" class="text-danger"></span>
                 </div>
-                <div class="form-group">
-                    <label asp-for="Estado" class="control-label"></label>
-                    @if (User.IsInRole("Administrador")) // Verificar si es administrador
-                    {
-                        <select asp-for="Estado" class="form-control">
-                            <option value="">Seleccione Estado</option>
-                            <option value="true">Activo</option>
-                            <option value="false">Inactivo</option>
-                        </select>
-                    }
-                    else
-                    {
-                        <p class="form-control-plaintext">
-                            @(Model.Estado ? "Activo" : "Inactivo")
-                        </p>
-                        <input type="hidden" asp-for="Estado" />
-                    }
-                    <span asp-validation-for="Estado" class="text-danger"></span>
-                </div>
+                
+                @if(Model != null && Model.ID_inquilino >0)
+                {
+                    <div class="form-group">
+                        <label asp-for="Estado" class="control-label"></label>
+                        @if(User.IsInRole("Administrador"))
+                        {
+                            <select asp-for="Estado" class="form-control">
+                                <option value="true" >Activo</option>
+                                <option value="false">Inactivo</option>
+                            </select>
+                        }
+                        else
+                        {
+                            <p class="form-control-plaintext">
+                                @(Model.Estado ? "Activo" : "Inactivo")
+                            </p>
+                            <input type="hidden" asp-for="Estado"/>
+                        }
+                        <span asp-validation-for="Estado" class="text-danger"></span>
+                    </div>
+                }
+                
                 <div class="form-group text-center">
                     <input type="submit" value="Guardar" class="btn btn-primary btn-lg" />
+                    <a asp-action="Index" class="btn btn-secondary btn-lg">Volver</a>
                 </div>
-
             </form>
         </div>
-    </div
-    <div class="text-center mt-3 mb-5">
-        <a asp-action="Index" class="btn btn-secondary">Volver</a>
     </div>
 </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        document.getElementById('formInquilino').addEventListener('submit', function(e) {
+            let form = e.target;
+            let changed = false;
+
+            // Verificamos solo los campos con data-original
+            form.querySelectorAll('input[data-original]').forEach(el => {
+                let original = el.dataset.original || "";
+                let value = el.value || "";
+
+                if(el.type === 'number') {
+                    if(parseFloat(value) !== parseFloat(original)) changed = true;
+                } else {
+                    if(value !== original) changed = true;
+                }
+            });
+
+            if(!changed) {
+                e.preventDefault();
+                Swal.fire({
+                    title: 'Sin cambios',
+                    text: 'No se detectaron cambios para guardar.',
+                    icon: 'info',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
+    </script>
+}

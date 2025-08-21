@@ -15,7 +15,8 @@ namespace inmobiliariaAST.Models
             using (MySqlConnection connection = new MySqlConnection(ConnectionString))
             {
                 connection.Open();
-                string query = @"SELECT c.ID_contrato, c.Fecha_Inicio, c.Fecha_Fin, c.Monto_Mensual, c.Estado,
+                string query = @"SELECT c.ID_contrato, c.ID_inmueble, c.ID_inquilino ,c.Fecha_Inicio, 
+                                        c.Fecha_Fin, c.Monto_Mensual, c.Estado,
                                         c.Fecha_Terminacion_Anticipada, c.Multa, 
                                         i.Direccion AS InmuebleDireccion, 
                                         CONCAT(iq.Nombre, ' ', iq.Apellido) AS InquilinoNombreCompleto
@@ -44,9 +45,17 @@ namespace inmobiliariaAST.Models
                                     ? (decimal?)null
                                     : reader.GetDecimal("Multa"),
 
-                                // // reemplazo ID_inmueble y ID_inquilino 
-                                // InmuebleDireccion = reader.GetString("InmuebleDireccion"),
-                                // InquilinoNombreCompleto = reader.GetString("InquilinoNombreCompleto")
+                                Inmueble = new Inmueble
+                                {
+                                    ID_inmueble = reader.GetInt32("ID_inmueble"),
+                                    Direccion = reader.GetString("InmuebleDireccion")
+                                },
+
+                                Inquilino = new Inquilino
+                                {
+                                    ID_inquilino = reader.GetInt32("ID_inquilino"),
+                                    Nombre = reader.GetString("InquilinoNombreCompleto")
+                                }
                             };
 
                             contratos.Add(contrato);
@@ -54,7 +63,6 @@ namespace inmobiliariaAST.Models
                     }
                 }
             }
-
             return contratos;
         }
 
@@ -102,9 +110,17 @@ namespace inmobiliariaAST.Models
                                     ? (decimal?)null
                                     : reader.GetDecimal("Multa"),
                                 
-                                  // reemplazo ID_inmueble y ID_inquilino 
-                                // InmuebleDireccion = reader.GetString("InmuebleDireccion"),
-                                // InquilinoNombreCompleto = reader.GetString("InquilinoNombreCompleto")
+                                Inmueble = new Inmueble
+                                {
+                                    ID_inmueble = reader.GetInt32("ID_inmueble"),
+                                    Direccion = reader.GetString("InmuebleDireccion")
+                                },
+
+                                Inquilino = new Inquilino
+                                {
+                                    ID_inquilino = reader.GetInt32("ID_inquilino"),
+                                    Nombre = reader.GetString("InquilinoNombreCompleto")
+                                }
                             };
                         }
                     }
